@@ -1,7 +1,5 @@
 # 🤖 PickLLM
 
-> Find the perfect AI model for any task
-
 ![PickLLM Hero Image](./images/cover.png)
 
 ## 📝 What is PickLLM?

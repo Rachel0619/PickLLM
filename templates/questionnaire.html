@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block title %}Questionnaire - PickLLM{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-5">
+                <h2 class="fw-bold mb-3">Tell Us About Your <span class="gradient-text">Use Case</span></h2>
+                <p class="lead text-secondary">
+                    Answer a few quick questions to get personalized LLM recommendations
+                </p>
+            </div>
+
+            <!-- Questionnaire Form -->
+            <form id="questionnaireForm" action="/submit-questionnaire" method="POST">
+                <div class="card bg-white border-warning shadow-sm">
+                    <div class="card-body p-4">
+
+                        <!-- Question 1: Primary Use Case -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">1. What's your primary use case?</label>
+                            <div class="mt-2">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="use_case" value="chatbot" id="chatbot">
+                                    <label class="form-check-label" for="chatbot">
+                                        💬 Chatbot/Conversational AI
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="use_case" value="content" id="content">
+                                    <label class="form-check-label" for="content">
+                                        ✍️ Content Generation
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="use_case" value="coding" id="coding">
+                                    <label class="form-check-label" for="coding">
+                                        💻 Code Generation/Programming
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="use_case" value="analysis" id="analysis">
+                                    <label class="form-check-label" for="analysis">
+                                        📊 Data Analysis/Research
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="use_case" value="other" id="other">
+                                    <label class="form-check-label" for="other">
+                                        🔧 Other
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Question 2: Budget -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">2. What's your budget priority?</label>
+                            <div class="mt-2">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="budget" value="free" id="free">
+                                    <label class="form-check-label" for="free">
+                                        💚 Free/Open Source Only
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="budget" value="low" id="low">
+                                    <label class="form-check-label" for="low">
+                                        💰 Low Cost ($0.01-$0.10 per 1K tokens)
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="budget" value="medium" id="medium">
+                                    <label class="form-check-label" for="medium">
+                                        💳 Medium Cost ($0.10-$1.00 per 1K tokens)
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="budget" value="high" id="high">
+                                    <label class="form-check-label" for="high">
+                                        🏆 Performance Over Cost
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Question 3: Speed Requirements -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">3. How important is response speed?</label>
+                            <div class="mt-2">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="speed" value="realtime" id="realtime">
+                                    <label class="form-check-label" for="realtime">
+                                        ⚡ Real-time (< 1 second)
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="speed" value="fast" id="fast">
+                                    <label class="form-check-label" for="fast">
+                                        🚀 Fast (1-5 seconds)
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="speed" value="moderate" id="moderate">
+                                    <label class="form-check-label" for="moderate">
+                                        ⏱️ Moderate (5-15 seconds)
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="speed" value="slow" id="slow">
+                                    <label class="form-check-label" for="slow">
+                                        🐌 Quality over Speed
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Question 4: Model Size Preference -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">4. Model size preference?</label>
+                            <div class="mt-2">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="model_size" value="small" id="small">
+                                    <label class="form-check-label" for="small">
+                                        📱 Small (< 7B parameters) - Fast, efficient
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="model_size" value="medium" id="medium_size">
+                                    <label class="form-check-label" for="medium_size">
+                                        🖥️ Medium (7B-70B parameters) - Balanced
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="model_size" value="large" id="large">
+                                    <label class="form-check-label" for="large">
+                                        🏢 Large (70B+ parameters) - Most capable
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="model_size" value="no_preference" id="no_preference">
+                                    <label class="form-check-label" for="no_preference">
+                                        🤷 No preference
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Optional: Detailed Description -->
+                        <div class="mb-4">
+                            <label for="description" class="form-label fw-semibold">
+                                5. Additional details about your use case (optional)
+                            </label>
+                            <textarea class="form-control bg-light border-warning"
+                                      id="description"
+                                      name="description"
+                                      rows="3"
+                                      placeholder="Tell us more about your specific requirements, constraints, or use case details..."></textarea>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary-custom btn-lg">
+                                Get My Recommendations
+                                <i class="ms-2">🎯</i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Form validation and submission
+    document.getElementById('questionnaireForm').addEventListener('submit', function(e) {
+        // Basic validation
+        const required = ['use_case', 'budget', 'speed', 'model_size'];
+        let isValid = true;
+
+        required.forEach(field => {
+            if (!document.querySelector(`input[name="${field}"]:checked`)) {
+                isValid = false;
+            }
+        });
+
+        if (!isValid) {
+            e.preventDefault();
+            alert('Please answer all required questions before proceeding.');
+            return false;
+        }
+
+        // Show loading state
+        const submitBtn = document.querySelector('button[type="submit"]');
+        submitBtn.innerHTML = 'Analyzing Your Needs... <div class="spinner-border spinner-border-sm ms-2" role="status"></div>';
+        submitBtn.disabled = true;
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}Your LLM Recommendations - PickLLM{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-5">
+                <h2 class="fw-bold mb-3">Your <span class="gradient-text">LLM Recommendations</span></h2>
+                <p class="lead text-secondary">
+                    Based on your requirements, here are the top 3 models we recommend
+                </p>
+            </div>
+
+            <!-- Placeholder for Recommendations -->
+            <div class="row">
+                <!-- Recommendation 1 -->
+                <div class="col-lg-4 mb-4">
+                    <div class="card bg-white border-warning h-100 shadow-sm">
+                        <div class="card-header bg-warning text-dark">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">🥇 Best Match</h5>
+                                <span class="badge bg-dark text-warning">Recommended</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="card-title">GPT-4 Turbo</h6>
+                            <p class="card-text small text-secondary">
+                                Most capable model for complex tasks with excellent reasoning abilities.
+                            </p>
+                            <ul class="list-unstyled small">
+                                <li><strong>Cost:</strong> $0.03/1K tokens</li>
+                                <li><strong>Speed:</strong> 2-4 seconds</li>
+                                <li><strong>Size:</strong> Large (175B+)</li>
+                                <li><strong>Best for:</strong> Complex reasoning</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommendation 2 -->
+                <div class="col-lg-4 mb-4">
+                    <div class="card bg-white border-warning h-100 shadow-sm">
+                        <div class="card-header bg-warning text-dark">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">🥈 Great Option</h5>
+                                <span class="badge bg-dark text-warning">Alternative</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="card-title">Claude 3.5 Sonnet</h6>
+                            <p class="card-text small text-secondary">
+                                Excellent balance of capability and cost with strong safety features.
+                            </p>
+                            <ul class="list-unstyled small">
+                                <li><strong>Cost:</strong> $0.025/1K tokens</li>
+                                <li><strong>Speed:</strong> 1-3 seconds</li>
+                                <li><strong>Size:</strong> Large</li>
+                                <li><strong>Best for:</strong> Balanced performance</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommendation 3 -->
+                <div class="col-lg-4 mb-4">
+                    <div class="card bg-white border-warning h-100 shadow-sm">
+                        <div class="card-header bg-warning text-dark">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">🥉 Budget Pick</h5>
+                                <span class="badge bg-dark text-warning">Economical</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="card-title">Llama 3.1 70B</h6>
+                            <p class="card-text small text-secondary">
+                                Open-source model with strong performance at lower cost.
+                            </p>
+                            <ul class="list-unstyled small">
+                                <li><strong>Cost:</strong> $0.008/1K tokens</li>
+                                <li><strong>Speed:</strong> 2-5 seconds</li>
+                                <li><strong>Size:</strong> Medium (70B)</li>
+                                <li><strong>Best for:</strong> Cost efficiency</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reasoning Section -->
+            <div class="card bg-white border-warning mt-4 shadow-sm">
+                <div class="card-header">
+                    <h5 class="mb-0">💡 Why These Recommendations?</h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-3">Based on your questionnaire responses:</p>
+                    <ul class="text-secondary">
+                        <li>You indicated <strong>[Use Case]</strong> as your primary need</li>
+                        <li>Your budget preference is <strong>[Budget Range]</strong></li>
+                        <li>You prioritize <strong>[Speed/Quality Balance]</strong></li>
+                        <li>You prefer <strong>[Model Size]</strong> models</li>
+                    </ul>
+                    <p class="small text-secondary mt-3">
+                        <em>Note: This is a placeholder. In the full implementation, this will show actual reasoning based on your responses and our recommendation algorithm.</em>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="text-center mt-5">
+                <a href="/questionnaire" class="btn btn-outline-dark me-3">
+                    ← Retake Questionnaire
+                </a>
+                <a href="/" class="btn btn-primary-custom">
+                    🏠 Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Future: Add comparison features, detailed specs, etc.
+    console.log('Results page loaded');
+</script>
+{% endblock %}

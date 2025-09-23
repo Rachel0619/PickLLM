@@ -48,11 +48,10 @@ Landing Page → Questionnaire → Backend Analysis → Results → Your Perfect
 
 ## 🛠️ Tech Stack
 
-- **Backend:** Python, PostgreSQL/MongoDB
-- **LLM Integration:** OpenAI API, LangChain
-- **Recommendation Engine:** Rule-based + ML algorithms
-- **Development:** Cursor, Claude Code
-- **Version Control:** GitHub
+- **Backend:** Flask (Python)
+- **Frontend:** Jinja2 Templates + Bootstrap 5
+- **Styling:** Custom CSS + Bootstrap
+- **Package Management:** uv
 - **Deployment:** Vercel, AWS/GCP/Azure
 
 ## ⚡ Quick Start
@@ -60,8 +59,7 @@ Landing Page → Questionnaire → Backend Analysis → Results → Your Perfect
 ### Prerequisites
 
 - Python 3.8+
-- Node.js 16+
-- PostgreSQL or MongoDB
+- uv (for dependency management)
 
 ### Installation
 
@@ -70,27 +68,21 @@ Landing Page → Questionnaire → Backend Analysis → Results → Your Perfect
 git clone https://github.com/your-username/PickLLM.git
 cd PickLLM
 
-# Install backend dependencies
-pip install -r requirements.txt
+# Install dependencies with uv
+uv add flask python-dotenv
 
-# Install frontend dependencies (when available)
-npm install
-
-# Set up environment variables
+# Set up environment variables (optional)
 cp .env.example .env
-# Edit .env with your API keys and database credentials
+# Edit .env with your configuration if needed
 ```
 
 ### Running the Application
 
 ```bash
-# Start the backend server
-python app.py
+# Start the Flask development server
+uv run python app.py
 
-# Start the frontend (when available)
-npm run dev
-
-# Open your browser to http://localhost:3000
+# Open your browser to http://localhost:5555
 ```
 
 ## 🎯 Features
@@ -101,6 +93,7 @@ npm run dev
 - ⚖️ **Side-by-Side Comparison** - Compare models on key metrics
 - 💡 **Actionable Insights** - Clear explanations, not just numbers
 - 🚀 **Fast & Simple** - Get recommendations in minutes, not hours
+- 🎯 **No Signup Required** - Jump straight to finding your perfect LLM
 
 ## 🤝 Contributing
 
@@ -118,9 +111,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🗺️ Roadmap
 
-- [ ] **Phase 1:** Core questionnaire and recommendation engine
+- [x] **Phase 1:** Core questionnaire and recommendation engine
 - [ ] **Phase 2:** Advanced filtering and comparison features
-- [ ] **Phase 3:** User accounts and saved recommendations
+- [ ] **Phase 3:** LLM database integration with real-time data
 - [ ] **Phase 4:** API access for developers
+<<<<<<< HEAD
 - [ ] **Phase 5:** Mobile app
 >>>>>>> 033a037 (initial commit)
+=======
+- [ ] **Phase 5:** Mobile app and advanced analytics
+>>>>>>> 933673b (added POC)

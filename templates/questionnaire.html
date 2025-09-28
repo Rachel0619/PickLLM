@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import "_macros.html" as macros %}
 
 {% block title %}Questionnaire - PickLLM{% endblock %}
 
@@ -19,135 +20,64 @@
                 <div class="card bg-white border-warning shadow-sm">
                     <div class="card-body p-4">
 
-                        <!-- Question 1: Primary Use Case -->
-                        <div class="mb-4">
-                            <label class="form-label fw-semibold">1. What's your primary use case?</label>
-                            <div class="mt-2">
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="use_case" value="chatbot" id="chatbot">
-                                    <label class="form-check-label" for="chatbot">
-                                        💬 Chatbot/Conversational AI
-                                    </label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="use_case" value="content" id="content">
-                                    <label class="form-check-label" for="content">
-                                        ✍️ Content Generation
-                                    </label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="use_case" value="coding" id="coding">
-                                    <label class="form-check-label" for="coding">
-                                        💻 Code Generation/Programming
-                                    </label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="use_case" value="analysis" id="analysis">
-                                    <label class="form-check-label" for="analysis">
-                                        📊 Data Analysis/Research
-                                    </label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="use_case" value="other" id="other">
-                                    <label class="form-check-label" for="other">
-                                        🔧 Other
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
+                        {% set radio_questions = [
+                            {
+                                'number': 1,
+                                'title': "What's your primary use case?",
+                                'name': 'use_case',
+                                'options': [
+                                    {'id': 'chatbot', 'value': 'chatbot', 'label': '💬 Chatbot/Conversational AI'},
+                                    {'id': 'content', 'value': 'content', 'label': '✍️ Content Generation'},
+                                    {'id': 'coding', 'value': 'coding', 'label': '💻 Code Generation/Programming'},
+                                    {'id': 'analysis', 'value': 'analysis', 'label': '📊 Data Analysis/Research'},
+                                    {'id': 'other', 'value': 'other', 'label': '🔧 Other'}
+                                ]
+                            },
+                            {
+                                'number': 2,
+                                'title': "What's your budget priority?",
+                                'name': 'budget',
+                                'options': [
+                                    {'id': 'free', 'value': 'free', 'label': '💚 Free/Open Source Only'},
+                                    {'id': 'low', 'value': 'low', 'label': '💰 Low Cost ($0.01-$0.10 per 1K tokens)'},
+                                    {'id': 'medium', 'value': 'medium', 'label': '💳 Medium Cost ($0.10-$1.00 per 1K tokens)'},
+                                    {'id': 'high', 'value': 'high', 'label': '🏆 Performance Over Cost'}
+                                ]
+                            },
+                            {
+                                'number': 3,
+                                'title': 'How important is response speed?',
+                                'name': 'speed',
+                                'options': [
+                                    {'id': 'realtime', 'value': 'realtime', 'label': '⚡ Real-time (< 1 second)'},
+                                    {'id': 'fast', 'value': 'fast', 'label': '🚀 Fast (1-5 seconds)'},
+                                    {'id': 'moderate', 'value': 'moderate', 'label': '⏱️ Moderate (5-15 seconds)'},
+                                    {'id': 'slow', 'value': 'slow', 'label': '🐌 Quality over Speed'}
+                                ]
+                            },
+                            {
+                                'number': 4,
+                                'title': 'Model size preference?',
+                                'name': 'model_size',
+                                'options': [
+                                    {'id': 'small', 'value': 'small', 'label': '📱 Small (< 7B parameters) - Fast, efficient'},
+                                    {'id': 'medium_size', 'value': 'medium', 'label': '🖥️ Medium (7B-70B parameters) - Balanced'},
+                                    {'id': 'large', 'value': 'large', 'label': '🏢 Large (70B+ parameters) - Most capable'},
+                                    {'id': 'no_preference', 'value': 'no_preference', 'label': '🤷 No preference'}
+                                ]
+                            }
+                        ] %}
 
-                        <!-- Question 2: Budget -->
+                        {% for question in radio_questions %}
                         <div class="mb-4">
-                            <label class="form-label fw-semibold">2. What's your budget priority?</label>
+                            <label class="form-label fw-semibold">{{ question.number }}. {{ question.title }}</label>
                             <div class="mt-2">
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="budget" value="free" id="free">
-                                    <label class="form-check-label" for="free">
-                                        💚 Free/Open Source Only
-                                    </label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="budget" value="low" id="low">
-                                    <label class="form-check-label" for="low">
-                                        💰 Low Cost ($0.01-$0.10 per 1K tokens)
-                                    </label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="budget" value="medium" id="medium">
-                                    <label class="form-check-label" for="medium">
-                                        💳 Medium Cost ($0.10-$1.00 per 1K tokens)
-                                    </label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="budget" value="high" id="high">
-                                    <label class="form-check-label" for="high">
-                                        🏆 Performance Over Cost
-                                    </label>
-                                </div>
+                                {% for option in question.options %}
+                                    {{ macros.radio_option(question.name, option) }}
+                                {% endfor %}
                             </div>
                         </div>
-
-                        <!-- Question 3: Speed Requirements -->
-                        <div class="mb-4">
-                            <label class="form-label fw-semibold">3. How important is response speed?</label>
-                            <div class="mt-2">
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="speed" value="realtime" id="realtime">
-                                    <label class="form-check-label" for="realtime">
-                                        ⚡ Real-time (< 1 second)
-                                    </label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="speed" value="fast" id="fast">
-                                    <label class="form-check-label" for="fast">
-                                        🚀 Fast (1-5 seconds)
-                                    </label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="speed" value="moderate" id="moderate">
-                                    <label class="form-check-label" for="moderate">
-                                        ⏱️ Moderate (5-15 seconds)
-                                    </label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="speed" value="slow" id="slow">
-                                    <label class="form-check-label" for="slow">
-                                        🐌 Quality over Speed
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Question 4: Model Size Preference -->
-                        <div class="mb-4">
-                            <label class="form-label fw-semibold">4. Model size preference?</label>
-                            <div class="mt-2">
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="model_size" value="small" id="small">
-                                    <label class="form-check-label" for="small">
-                                        📱 Small (< 7B parameters) - Fast, efficient
-                                    </label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="model_size" value="medium" id="medium_size">
-                                    <label class="form-check-label" for="medium_size">
-                                        🖥️ Medium (7B-70B parameters) - Balanced
-                                    </label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="model_size" value="large" id="large">
-                                    <label class="form-check-label" for="large">
-                                        🏢 Large (70B+ parameters) - Most capable
-                                    </label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="model_size" value="no_preference" id="no_preference">
-                                    <label class="form-check-label" for="no_preference">
-                                        🤷 No preference
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
+                        {% endfor %}
 
                         <!-- Optional: Detailed Description -->
                         <div class="mb-4">

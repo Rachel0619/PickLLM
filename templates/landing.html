@@ -19,28 +19,33 @@
             </p>
 
             <!-- Key Benefits -->
+            {% set benefits = [
+                {
+                    'emoji': '📋',
+                    'title': 'Smart Questionnaire',
+                    'description': 'Quick questions to understand your use case'
+                },
+                {
+                    'emoji': '🧠',
+                    'title': 'AI-Powered Matching',
+                    'description': 'Advanced algorithms find your best fit'
+                },
+                {
+                    'emoji': '🏆',
+                    'title': 'Top 3 Recommendations',
+                    'description': 'Curated suggestions with clear reasoning'
+                }
+            ] %}
             <div class="row mb-5">
+                {% for benefit in benefits %}
                 <div class="col-md-4 mb-3">
                     <div class="d-flex align-items-center justify-content-center mb-2">
-                        <span class="fs-2">📋</span>
+                        <span class="fs-2">{{ benefit.emoji }}</span>
                     </div>
-                    <h6 class="fw-semibold">Smart Questionnaire</h6>
-                    <small class="text-secondary">Quick questions to understand your use case</small>
+                    <h6 class="fw-semibold">{{ benefit.title }}</h6>
+                    <small class="text-secondary">{{ benefit.description }}</small>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <div class="d-flex align-items-center justify-content-center mb-2">
-                        <span class="fs-2">🧠</span>
-                    </div>
-                    <h6 class="fw-semibold">AI-Powered Matching</h6>
-                    <small class="text-secondary">Advanced algorithms find your best fit</small>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <div class="d-flex align-items-center justify-content-center mb-2">
-                        <span class="fs-2">🏆</span>
-                    </div>
-                    <h6 class="fw-semibold">Top 3 Recommendations</h6>
-                    <small class="text-secondary">Curated suggestions with clear reasoning</small>
-                </div>
+                {% endfor %}
             </div>
 
             <!-- CTA Button -->

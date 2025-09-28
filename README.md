@@ -85,6 +85,47 @@ uv run python app.py
 # Open your browser to http://localhost:5555
 ```
 
+### Data Collection
+
+```bash
+# Collect the latest LLM leaderboard data
+python collect_leaderboard_data.py
+
+# This will create CSV files in the data/ directory with current rankings
+```
+
+## 📊 Data
+
+PickLLM's recommendations are powered by real-time data from the **LMArena Leaderboard**, one of the most comprehensive and trusted sources for LLM performance evaluation.
+
+### 🏟️ LMArena Dataset
+
+Source: [LMArena Leaderboard](https://huggingface.co/spaces/lmarena-ai/lmarena-leaderboard) by LMSYS
+
+**What is LMArena?**
+LMArena is a crowdsourced platform where users compare LLM responses side-by-side in real conversations. Unlike synthetic benchmarks, LMArena captures real-world performance through human preference data.
+
+**Data Dimensions:**
+- 📝 Text - General conversation and text generation (258+ models)
+- 👁️ Vision - Multimodal visual understanding (87+ models)
+- 🖼️ Image - Image generation and editing (18+ models)
+- ✏️ Image-Edit - Advanced image manipulation capabilities
+- 🌐 WebDev - Web development and coding assistance
+
+**Key Metrics:**
+- Arena Score - Elo rating from head-to-head comparisons
+- Confidence Intervals - Statistical reliability of rankings
+- Vote Count - Number of human evaluations
+- Model Metadata - Organization, license, knowledge cutoff
+
+**Why LMArena?**
+1. Human-Centric - Based on real user preferences, not synthetic tests
+2. Comprehensive - Covers multiple modalities and use cases
+3. Transparent - Open methodology and continuous updates
+4. Battle-Tested - Millions of comparisons from diverse users worldwide
+
+This rich, real-world dataset enables PickLLM to provide recommendations that truly reflect how models perform in practice, not just in laboratory conditions.
+
 ## 🎯 Features
 
 - 📋 **Smart Questionnaire** - Intuitive questions to understand your needs

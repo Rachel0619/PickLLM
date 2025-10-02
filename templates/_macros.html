@@ -19,7 +19,7 @@
         <div class="card-body">
             <h6 class="card-title">{{ card.model }}</h6>
             <p class="card-text small text-secondary">
-                {{ card.summary }}
+                {{ card.summary | safe }}
             </p>
             <ul class="list-unstyled small">
                 {% for detail in card.details %}

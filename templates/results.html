@@ -27,7 +27,7 @@
                             'tier': tier_emojis[loop.index0] + ' ' + tier_labels[loop.index0],
                             'badge': tier_badges[loop.index0],
                             'model': rec.model,
-                            'summary': 'Top-ranked model from the LMSYS Chatbot Arena leaderboard',
+                            'summary': '🏆 Arena Score: ' ~ rec.arena_score ~ '<br>📊 ' ~ rec.votes ~ ' votes',
                             'details': [
                                 {'label': 'Organization', 'value': rec.organization},
                                 {'label': 'License', 'value': rec.license}

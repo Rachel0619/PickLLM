@@ -6,10 +6,15 @@ import subprocess
 import sys
 from datetime import datetime
 
+FILE_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = os.path.abspath(os.path.join(FILE_DIR, os.pardir))
+CSV_DIR = os.path.join(ROOT_DIR, "data")
+LMARENA_DIR = os.path.join(ROOT_DIR, "lmarena")
+
 def clone_lmarena_repo():
     """Clone the LMArena repository if it doesn't exist."""
     url = "https://huggingface.co/spaces/lmarena-ai/lmarena-leaderboard"
-    repo = "lmarena"
+    repo = LMARENA_DIR
     if not os.path.exists(repo):
         try:
             print("Installing git-lfs...")
@@ -37,8 +42,8 @@ def get_pkl_by_date(repo):
 
     # Check if today's exact file exists
     today_file = f"{repo}/elo_results_{today}.pkl"
-    if os.path.exists(exact):
-        print(f"Found exact file for {today}: {exact}", file=sys.stderr)
+    if os.path.exists(today_file):
+        print(f"Found exact file for {today}: {today_file}", file=sys.stderr)
         return today_file
 
     # If not found, get the newest available file
@@ -72,24 +77,29 @@ def load_lmarena_data(filename, subset):
     else:
         return None
 
-def load_lmarena_metadata(repo, date):
-    filename = f"{repo}/leaderboard_table_{date}.csv"
-    if os.path.exists(filename):
-        print(f"Loaded metadata for {date}")
-        return pd.read_csv(filename)
-
-    # Try alternative metadata file patterns and get the most recent one
+def load_lmarena_metadata(repo):
+    # Find all metadata files and get the most recent one
     metadata_files = glob.glob(f"{repo}/leaderboard_table_*.csv")
     if metadata_files:
         # Sort by date in filename to get the most recent
         metadata_files.sort(key=lambda x: get_date_from_filename(x), reverse=True)
         latest_file = metadata_files[0]
         latest_date = get_date_from_filename(latest_file)
-        print(f"Metadata file for {date} not found. Using latest metadata file: {latest_file} (date: {latest_date})", file=sys.stderr)
-        return pd.read_csv(latest_file)
+        print(f"Using latest metadata file: {latest_file} (date: {latest_date})", file=sys.stderr)
+        df = pd.read_csv(latest_file)
+    else:
+        print(f"No metadata files found in {repo}", file=sys.stderr)
+        return None
 
-    print(f"No metadata files found in {repo}", file=sys.stderr)
-    return None
+    # Save a copy to project-root data/metadata_<date>.csv
+    out_dir = build_directory(CSV_DIR)
+    out_path = os.path.join(out_dir, f"metadata_{latest_date}.csv")
+    try:
+        df.to_csv(out_path, index=False)
+        print(f"Saved metadata to {out_path}")
+    except Exception as e:
+        print(f"Failed to save metadata to {out_path}: {e}", file=sys.stderr)
+    return df
 
 def build_full_leaderboard(leaderboard, metadata):
     lm = leaderboard.merge(metadata, left_index=True, right_on='key')
@@ -120,17 +130,17 @@ def build_directory(dir):
     return dir
 
 def build_lmarena_leaderboards(metadata, filename):
-    dir = build_directory("csv")
+    dir = build_directory(CSV_DIR)
     subsets = ['text', 'vision', 'image', 'image-edit', 'webdev']
     for subset in subsets:
         print(f"Building {subset} Leaderboard")
         leaderboard = load_lmarena_data(filename, subset)
         df = build_full_leaderboard(leaderboard, metadata)
-        path = f"{dir}/lmarena_{subset}.csv"
+        path = os.path.join(dir, f"lmarena_{subset}.csv")
         df.to_csv(path, index=False)
 
 if __name__ == "__main__":
     repo = clone_lmarena_repo()
     date, filename = get_date_version(repo)
-    metadata = load_lmarena_metadata(repo, date)
+    metadata = load_lmarena_metadata(repo)
     build_lmarena_leaderboards(metadata, filename)

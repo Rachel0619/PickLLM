@@ -3,6 +3,90 @@
 
 {% block title %}Questionnaire - PickLLM{% endblock %}
 
+{% block head %}
+<style>
+    /* Option grid layout - full width single column */
+    .option-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    /* Card-style radio buttons */
+    .form-check {
+        margin: 0;
+    }
+    .form-check-input {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+        pointer-events: none;
+    }
+    .form-check-label {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        width: 100%;
+        padding: 16px 18px;
+        border: 1.5px solid #e5e7eb; /* slate-200 */
+        border-radius: 16px;
+        background: #fff;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+        cursor: pointer;
+        transition: border-color .15s ease, box-shadow .15s ease, transform .05s ease;
+        color: var(--text-dark);
+        font-size: 1.05rem;
+        line-height: 1.35;
+        word-break: break-word;
+    }
+    .form-check-label:hover {
+        border-color: #d1d5db; /* slate-300 */
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    /* Custom radio icon */
+    .form-check-label::before {
+        content: '';
+        width: 22px;
+        height: 22px;
+        border: 2px solid #6b7280; /* slate-500 */
+        border-radius: 50%;
+        background: #fff;
+        display: inline-block;
+        flex-shrink: 0;
+        box-sizing: border-box;
+        transition: border-color .15s ease, background .15s ease, box-shadow .15s ease;
+    }
+    .form-check-input:focus + .form-check-label {
+        box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.15); /* primary focus */
+        border-color: var(--primary-color);
+    }
+    .form-check-input:checked + .form-check-label {
+        border-color: var(--primary-color);
+        box-shadow: 0 6px 16px rgba(245, 158, 11, 0.15);
+    }
+    .form-check-input:checked + .form-check-label::before {
+        border-color: var(--primary-color);
+        background: radial-gradient(circle at center, var(--primary-color) 0 6px, #fff 7px 100%);
+    }
+
+    /* Full width cards */
+    .option-grid .form-check { width: 100%; }
+    .option-grid .form-check-label { width: 100%; min-height: 88px; }
+    
+    /* Question title styling */
+    .question-title {
+        font-size: clamp(1.125rem, 0.9rem + 0.8vw, 1.6rem);
+        font-weight: 500; /* lighter, less attention-grabbing */
+        text-align: center;
+        color: var(--text-dark);
+        display: block;
+        margin: 8px 0 20px 0;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container py-5">
     <div class="row">
@@ -13,6 +97,11 @@
                 <p class="lead text-secondary">
                     Answer a few quick questions to get personalized LLM recommendations
                 </p>
+                <!-- Progress Bar -->
+                <div class="progress mt-4 mb-2" style="height: 8px; background-color: #f1f5f9;">
+                    <div class="progress-bar bg-warning" role="progressbar" style="width: 14%;" aria-valuenow="1" aria-valuemin="0" aria-valuemax="7" id="progressBar"></div>
+                </div>
+                <small class="text-muted" id="progressText">Question 1 of 7</small>
             </div>
 
             <!-- Questionnaire Form -->
@@ -23,55 +112,90 @@
                         {% set radio_questions = [
                             {
                                 'number': 1,
-                                'title': "What's your primary use case?",
+                                'title': 'What\'s your primary use case?',
                                 'name': 'use_case',
                                 'options': [
-                                    {'id': 'chatbot', 'value': 'chatbot', 'label': '💬 Chatbot/Conversational AI'},
-                                    {'id': 'content', 'value': 'content', 'label': '✍️ Content Generation'},
-                                    {'id': 'coding', 'value': 'coding', 'label': '💻 Code Generation/Programming'},
-                                    {'id': 'analysis', 'value': 'analysis', 'label': '📊 Data Analysis/Research'},
-                                    {'id': 'other', 'value': 'other', 'label': '🔧 Other'}
+                                    {'id': 'usecase_conversational', 'value': 'conversational_knowledge', 'label': 'Conversational & Knowledge Agents'},
+                                    {'id': 'usecase_productivity', 'value': 'productivity_information', 'label': 'Productivity & Information Handling'},
+                                    {'id': 'usecase_creative', 'value': 'creative_content', 'label': 'Creative & Content Generation'},
+                                    {'id': 'usecase_technical', 'value': 'technical_developer', 'label': 'Technical & Developer Tools'},
+                                    {'id': 'usecase_automation', 'value': 'advanced_automation', 'label': 'Advanced Automation'},
+                                    {'id': 'usecase_visual', 'value': 'visual_ai', 'label': 'Visual AI'}
                                 ]
                             },
                             {
                                 'number': 2,
-                                'title': "What's your budget priority?",
-                                'name': 'budget',
+                                'title': 'What type of Visual AI do you need?',
+                                'name': 'visual_ai_type',
+                                'conditional': 'visual_ai',
                                 'options': [
-                                    {'id': 'free', 'value': 'free', 'label': '💚 Free/Open Source Only'},
-                                    {'id': 'low', 'value': 'low', 'label': '💰 Low Cost ($0.01-$0.10 per 1K tokens)'},
-                                    {'id': 'medium', 'value': 'medium', 'label': '💳 Medium Cost ($0.10-$1.00 per 1K tokens)'},
-                                    {'id': 'high', 'value': 'high', 'label': '🏆 Performance Over Cost'}
+                                    {'id': 'visual_understanding', 'value': 'image_understanding', 'label': 'Image Understanding (describe/analyze inputs)'},
+                                    {'id': 'visual_generation', 'value': 'image_generation', 'label': 'Image Generation (create from text prompts)'},
+                                    {'id': 'visual_editing', 'value': 'image_editing', 'label': 'Image Editing (modify existing images)'}
                                 ]
                             },
                             {
                                 'number': 3,
-                                'title': 'How important is response speed?',
-                                'name': 'speed',
+                                'title': 'Model type preference',
+                                'name': 'model_type',
                                 'options': [
-                                    {'id': 'realtime', 'value': 'realtime', 'label': '⚡ Real-time (< 1 second)'},
-                                    {'id': 'fast', 'value': 'fast', 'label': '🚀 Fast (1-5 seconds)'},
-                                    {'id': 'moderate', 'value': 'moderate', 'label': '⏱️ Moderate (5-15 seconds)'},
-                                    {'id': 'slow', 'value': 'slow', 'label': '🐌 Quality over Speed'}
+                                    {'id': 'model_open_only', 'value': 'open_only', 'label': 'Open weights only (self‑hostable)'},
+                                    {'id': 'model_prop_only', 'value': 'proprietary_only_enterprise', 'label': 'Proprietary only with enterprise SLA'},
+                                    {'id': 'model_none', 'value': 'no_preference', 'label': 'No preference'}
                                 ]
                             },
                             {
                                 'number': 4,
-                                'title': 'Model size preference?',
-                                'name': 'model_size',
+                                'title': 'Response speed requirements',
+                                'name': 'response_speed',
                                 'options': [
-                                    {'id': 'small', 'value': 'small', 'label': '📱 Small (< 7B parameters) - Fast, efficient'},
-                                    {'id': 'medium_size', 'value': 'medium', 'label': '🖥️ Medium (7B-70B parameters) - Balanced'},
-                                    {'id': 'large', 'value': 'large', 'label': '🏢 Large (70B+ parameters) - Most capable'},
-                                    {'id': 'no_preference', 'value': 'no_preference', 'label': '🤷 No preference'}
+                                    {'id': 'speed_realtime', 'value': 'realtime_streaming', 'label': 'Real‑time streaming'},
+                                    {'id': 'speed_fast', 'value': 'fast_1_2s', 'label': 'Fast (1–2s)'},
+                                    {'id': 'speed_moderate', 'value': 'moderate_2_5s', 'label': 'Moderate (2–5s)'},
+                                    {'id': 'speed_notcritical', 'value': 'not_critical_over_5s', 'label': 'Not critical (>5s fine)'}
+                                ]
+                            },
+                            {
+                                'number': 5,
+                                'title': "What's your budget priority?",
+                                'name': 'budget_priority',
+                                'options': [
+                                    {'id': 'budget_minimize', 'value': 'minimize_cost', 'label': 'Minimize cost'},
+                                    {'id': 'budget_value', 'value': 'best_value', 'label': 'Best value (cost/quality balance)'},
+                                    {'id': 'budget_premium', 'value': 'premium_quality', 'label': 'Premium quality even if expensive'},
+                                    {'id': 'budget_unsure', 'value': 'not_sure', 'label': 'Not sure'}
+                                ]
+                            },
+                            {
+                                'number': 6,
+                                'title': 'Estimated monthly budget',
+                                'name': 'monthly_budget',
+                                'options': [
+                                    {'id': 'mb_lt50', 'value': 'lt_50', 'label': '<$50'},
+                                    {'id': 'mb_50_200', 'value': '50_200', 'label': '$50–$200'},
+                                    {'id': 'mb_200_1k', 'value': '200_1000', 'label': '$200–$1k'},
+                                    {'id': 'mb_1k_10k', 'value': '1k_10k', 'label': '$1k–$10k'},
+                                    {'id': 'mb_gt10k', 'value': 'gt_10k', 'label': '$10k+'},
+                                    {'id': 'mb_unsure', 'value': 'not_sure', 'label': 'Not sure'}
+                                ]
+                            },
+                            {
+                                'number': 7,
+                                'title': 'Context length required (prompt + output)',
+                                'name': 'context_length',
+                                'options': [
+                                    {'id': 'ctx_short', 'value': 'short_le_8k', 'label': 'Short (≤8k tokens)'},
+                                    {'id': 'ctx_medium', 'value': 'medium_8k_32k', 'label': 'Medium (8k–32k)'},
+                                    {'id': 'ctx_long', 'value': 'long_32k_128k', 'label': 'Long (32k–128k)'},
+                                    {'id': 'ctx_huge', 'value': 'huge_ge_128k', 'label': 'Huge (≥128k)'}
                                 ]
                             }
                         ] %}
 
                         {% for question in radio_questions %}
-                        <div class="mb-4">
-                            <label class="form-label fw-semibold">{{ question.number }}. {{ question.title }}</label>
-                            <div class="mt-2">
+                        <div class="mb-4 step d-none" data-step="{{ question.number }}" data-name="{{ question.name }}" data-required="true" {% if question.conditional %}data-conditional="{{ question.conditional }}"{% endif %}>
+                            <label class="form-label question-title text-center">{{ question.title }}</label>
+                            <div class="mt-2 option-grid">
                                 {% for option in question.options %}
                                     {{ macros.radio_option(question.name, option) }}
                                 {% endfor %}
@@ -79,10 +203,10 @@
                         </div>
                         {% endfor %}
 
-                        <!-- Optional: Detailed Description -->
-                        <div class="mb-4">
-                            <label for="description" class="form-label fw-semibold">
-                                5. Additional details about your use case (optional)
+                        <!-- Step 8: Optional Detailed Description -->
+                        <div class="mb-4 step d-none" data-step="8" data-name="description" data-required="false">
+                            <label for="description" class="form-label question-title text-center">
+                                Additional details about your use case (optional)
                             </label>
                             <textarea class="form-control bg-light border-warning"
                                       id="description"
@@ -91,12 +215,16 @@
                                       placeholder="Tell us more about your specific requirements, constraints, or use case details..."></textarea>
                         </div>
 
-                        <!-- Submit Button -->
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary-custom btn-lg">
-                                Get My Recommendations
-                                <i class="ms-2">🎯</i>
-                            </button>
+                        <!-- Navigation Buttons -->
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <button type="button" id="backBtn" class="btn btn-outline-secondary">Back</button>
+                            <div class="ms-auto">
+                                <button type="button" id="nextBtn" class="btn btn-warning me-2">Next</button>
+                                <button type="submit" id="submitBtn" class="btn btn-primary-custom btn-lg d-none">
+                                    Get My Recommendations
+                                    <i class="ms-2">🎯</i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -108,28 +236,156 @@
 
 {% block scripts %}
 <script>
-    // Form validation and submission
-    document.getElementById('questionnaireForm').addEventListener('submit', function(e) {
-        // Basic validation
-        const required = ['use_case', 'budget', 'speed', 'model_size'];
-        let isValid = true;
+    // Multi-step navigation
+    (function() {
+        const steps = Array.from(document.querySelectorAll('.step'));
+        const backBtn = document.getElementById('backBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const form = document.getElementById('questionnaireForm');
 
-        required.forEach(field => {
-            if (!document.querySelector(`input[name="${field}"]:checked`)) {
-                isValid = false;
+        let currentIndex = 0;
+
+        function shouldShowStep(stepIndex) {
+            const stepEl = steps[stepIndex];
+            const conditional = stepEl.dataset.conditional;
+
+            if (!conditional) return true;
+
+            // Check if Visual AI was selected in question 1
+            const useCaseSelection = document.querySelector('input[name="use_case"]:checked');
+            return useCaseSelection && useCaseSelection.value === conditional;
+        }
+
+        function getNextValidStepIndex(fromIndex, direction = 1) {
+            let nextIndex = fromIndex + direction;
+
+            while (nextIndex >= 0 && nextIndex < steps.length) {
+                if (shouldShowStep(nextIndex)) {
+                    return nextIndex;
+                }
+                nextIndex += direction;
+            }
+
+            return -1; // No valid step found
+        }
+
+        function updateProgressBar(currentStep, totalSteps) {
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+
+            const percentage = (currentStep / totalSteps) * 100;
+            progressBar.style.width = percentage + '%';
+            progressBar.setAttribute('aria-valuenow', currentStep);
+            progressBar.setAttribute('aria-valuemax', totalSteps);
+            progressText.textContent = `Question ${currentStep} of ${totalSteps}`;
+        }
+
+        function getVisibleStepCount() {
+            return steps.filter((step, index) => shouldShowStep(index)).length;
+        }
+
+        function getVisibleStepPosition(stepIndex) {
+            let position = 1;
+            for (let i = 0; i < stepIndex; i++) {
+                if (shouldShowStep(i)) {
+                    position++;
+                }
+            }
+            return position;
+        }
+
+        function showStep(index) {
+            steps.forEach((el, i) => {
+                if (i === index) {
+                    el.classList.remove('d-none');
+                } else {
+                    el.classList.add('d-none');
+                }
+            });
+
+            // Update progress bar
+            const totalVisibleSteps = getVisibleStepCount();
+            const currentPosition = getVisibleStepPosition(index);
+            updateProgressBar(currentPosition, totalVisibleSteps);
+
+            // Back button visibility
+            if (index === 0) {
+                backBtn.classList.add('d-none');
+            } else {
+                backBtn.classList.remove('d-none');
+            }
+
+            // Check if this is the last visible step
+            const nextValidIndex = getNextValidStepIndex(index, 1);
+            const isLast = nextValidIndex === -1;
+            nextBtn.classList.toggle('d-none', isLast);
+            submitBtn.classList.toggle('d-none', !isLast);
+        }
+
+        function validateCurrentStep() {
+            const stepEl = steps[currentIndex];
+            const required = stepEl.dataset.required === 'true';
+            const name = stepEl.dataset.name;
+
+            if (!required) return true;
+
+            if (name === 'description') return true; // defensive
+
+            const checked = document.querySelector(`input[name="${name}"]:checked`);
+            return !!checked;
+        }
+
+        backBtn.addEventListener('click', function() {
+            const prevValidIndex = getNextValidStepIndex(currentIndex, -1);
+            if (prevValidIndex !== -1) {
+                currentIndex = prevValidIndex;
+                showStep(currentIndex);
             }
         });
 
-        if (!isValid) {
-            e.preventDefault();
-            alert('Please answer all required questions before proceeding.');
-            return false;
-        }
+        nextBtn.addEventListener('click', function() {
+            if (!validateCurrentStep()) {
+                alert('Please answer this question to continue.');
+                return;
+            }
+            const nextValidIndex = getNextValidStepIndex(currentIndex, 1);
+            if (nextValidIndex !== -1) {
+                currentIndex = nextValidIndex;
+                showStep(currentIndex);
+            }
+        });
 
-        // Show loading state
-        const submitBtn = document.querySelector('button[type="submit"]');
-        submitBtn.innerHTML = 'Analyzing Your Needs... <div class="spinner-border spinner-border-sm ms-2" role="status"></div>';
-        submitBtn.disabled = true;
-    });
+        // Final submit validation (defensive)
+        form.addEventListener('submit', function(e) {
+            // Ensure all required and visible steps have answers
+            let isValid = true;
+
+            steps.forEach((stepEl, index) => {
+                const required = stepEl.dataset.required === 'true';
+                const name = stepEl.dataset.name;
+
+                // Only validate if step is required and should be shown
+                if (required && shouldShowStep(index) && name !== 'description') {
+                    if (!document.querySelector(`input[name="${name}"]:checked`)) {
+                        isValid = false;
+                    }
+                }
+            });
+
+            if (!isValid) {
+                e.preventDefault();
+                alert('Please answer all required questions before submitting.');
+                return false;
+            }
+
+            // Show loading state
+            submitBtn.innerHTML = 'Analyzing Your Needs... <div class="spinner-border spinner-border-sm ms-2" role="status"></div>';
+            submitBtn.disabled = true;
+        });
+
+        // Initialize
+        showStep(currentIndex);
+    })();
 </script>
 {% endblock %}

@@ -26,6 +26,11 @@
                 <li><strong>{{ detail.label }}:</strong> {{ detail.value }}</li>
                 {% endfor %}
             </ul>
+            {% if card.url %}
+            <a href="{{ card.url }}" target="_blank" class="btn btn-sm btn-outline-dark mt-2">
+                Learn More →
+            </a>
+            {% endif %}
         </div>
     </div>
 </div>

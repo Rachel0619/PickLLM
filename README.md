@@ -126,6 +126,77 @@ LMArena is a crowdsourced platform where users compare LLM responses side-by-sid
 
 This rich, real-world dataset enables PickLLM to provide recommendations that truly reflect how models perform in practice, not just in laboratory conditions.
 
+## 🧠 Recommendation Algorithm
+
+PickLLM uses a smart questionnaire-based approach to understand your specific needs and match them with the most suitable LLMs from our comprehensive database. Here's how our recommendation engine works:
+
+### 📋 Questionnaire Structure
+
+Our questionnaire consists of 8 core questions plus an optional description field, designed to capture the key factors that influence LLM selection:
+
+**1. Primary Use Case**
+- Conversational & Knowledge Agents
+- Productivity & Information Handling
+- Creative & Content Generation
+- Technical & Developer Tools
+- Advanced Automation
+- Visual AI
+
+➡️ If the user selects “Visual AI” show:
+
+**2. What type of Visual AI do you need?**
+- Image Understanding (describe/analyze inputs)
+- Image Generation (create from text prompts)
+- Image Editing (modify existing images)
+
+**3. Model Type Preference**
+- Open weights only (self-hostable)
+- Proprietary only with enterprise SLA
+- No preference
+
+**4. Response Speed Requirements**
+- Real-time streaming
+- Fast (1–2s)
+- Moderate (2–5s)
+- Not critical (>5s fine)
+
+**5. Budget Priority**
+- Minimize cost
+- Best value (cost/quality balance)
+- Premium quality even if expensive
+- Not sure
+
+**6. Estimated Monthly Budget**
+- <$50
+- $50–$200
+- $200–$1k
+- $1k–$10k
+- $10k+
+- Not sure
+
+**7. Context Length Required**
+- Short (≤8k tokens)
+- Medium (8k–32k)
+- Long (32k–128k)
+- Huge (≥128k)
+
+**8. Additional Details (Optional)**
+- Free-text field for specific requirements, constraints, or use case details
+
+### 🎯 Recommendation Logic
+
+Our algorithm processes your questionnaire responses through several stages:
+
+1. **Use Case Mapping** - Maps your primary use case to relevant LMArena categories (text, vision, image, etc.)
+2. **Capability Filtering** - Filters models based on must-have requirements (vision, image generation, model type)
+3. **Performance Scoring** - Weighs models based on arena scores and your specific use case requirements
+4. **Budget Optimization** - Considers cost-effectiveness within your budget constraints
+5. **Speed Matching** - Factors in latency requirements and model inference speeds
+6. **Context Length Validation** - Ensures selected models support your context length needs
+7. **Final Ranking** - Produces top 3 recommendations with detailed reasoning
+
+The result is a personalized selection of LLMs that best match your specific requirements, complete with explanations of why each model was chosen and how it addresses your needs.
+
 ## 🎯 Features
 
 - 📋 **Smart Questionnaire** - Intuitive questions to understand your needs

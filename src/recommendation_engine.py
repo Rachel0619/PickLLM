@@ -7,6 +7,29 @@ class RecommendationEngine:
         """Initialize the recommendation engine with data directory path."""
         self.data_dir = os.path.join(os.path.dirname(__file__), "..", "data")
 
+        # Organization to logo filename mapping
+        self.org_to_logo = {
+            'OpenAI': 'openai.png',
+            'Google': 'google.png',
+            'Anthropic': 'anthropic.png',
+            'Meta': 'meta.png',
+            'Microsoft': 'microsoft.png',
+            'Mistral': 'mistral.png',
+            'Cohere': 'cohere.png',
+            'xAI': 'xai.png',
+            'DeepSeek': 'deepseek.png',
+            'Alibaba': 'alibaba.png',
+            'Z.ai': 'zai.png',
+            'Moonshot': 'moonshot.png',
+            'Tencent': 'tencent.png',
+            'LG AI Research': 'lg.png',
+            'Perplexity': 'perplexity.png',
+            'AI21 Labs': 'ai21.png',
+            'Reka': 'reka.png',
+            'Inflection': 'inflection.png',
+            'Stability AI': 'stability.png',
+        }
+
         # Mapping from questionnaire choices to CSV files
         self.use_case_mapping = {
             'conversational_knowledge': ['lmarena_text.csv'],
@@ -125,15 +148,22 @@ class RecommendationEngine:
         # Convert to list of dictionaries with relevant fields
         recommendations = []
         for idx, row in top_models.iterrows():
+            organization = row.get('organization', 'Unknown')
+            # Get logo filename from mapping
+            logo_filename = self.org_to_logo.get(organization, '')
+            logo_url = f'/static/images/logos/{logo_filename}' if logo_filename else ''
+
             model_info = {
                 'rank': int(row.get('rank', idx + 1)),
                 'model': row.get('model', 'Unknown'),
                 'arena_score': row.get('arena_score', 'N/A'),
                 'votes': row.get('votes', 'N/A'),
-                'organization': row.get('organization', 'Unknown'),
+                'organization': organization,
                 'license': row.get('license', 'Unknown'),
                 'url': row.get('url', ''),
-                'ci': row.get('95_pct_ci', 'N/A')
+                'ci': row.get('95_pct_ci', 'N/A'),
+                'logo_url': logo_url,
+                'knowledge_cutoff': row.get('knowledge_cutoff', 'N/A')
             }
             recommendations.append(model_info)
 

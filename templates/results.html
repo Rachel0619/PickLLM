@@ -27,12 +27,13 @@
                             'tier': tier_emojis[loop.index0] + ' ' + tier_labels[loop.index0],
                             'badge': tier_badges[loop.index0],
                             'model': rec.model,
-                            'summary': '🏆 Arena Score: ' ~ rec.arena_score ~ '<br>📊 ' ~ rec.votes ~ ' votes',
+                            'summary': '🏆 Arena Score: ' ~ rec.arena_score ~ '<br>📊 ' ~ rec.votes ~ ' votes<br>📅 Knowledge Cutoff: ' ~ rec.knowledge_cutoff,
                             'details': [
                                 {'label': 'Organization', 'value': rec.organization},
                                 {'label': 'License', 'value': rec.license}
                             ],
-                            'url': rec.url
+                            'url': rec.url,
+                            'logo_url': rec.logo_url
                         } %}
                         {{ macros.recommendation_card(recommendation_card) }}
                     {% endfor %}
@@ -44,23 +45,15 @@
             {% endif %}
 
             <!-- Reasoning Section -->
-            {% if use_case %}
+            {% if explanation %}
             <div class="card bg-white border-warning mt-4 shadow-sm">
                 <div class="card-header">
                     <h5 class="mb-0">💡 Why These Recommendations?</h5>
                 </div>
                 <div class="card-body">
-                    <p class="mb-3">Based on your questionnaire responses:</p>
-                    <ul class="text-secondary">
-                        <li>Your primary use case: <strong>{{ use_case.replace('_', ' ').title() }}</strong></li>
-                        {% if visual_ai_type %}
-                        <li>Visual AI type: <strong>{{ visual_ai_type.replace('_', ' ').title() }}</strong></li>
-                        {% endif %}
-                        <li>These models are ranked by <strong>Arena Score</strong> from the LMSys Chatbot Arena leaderboard</li>
-                        <li>Higher scores indicate better performance based on <strong>community voting</strong></li>
-                    </ul>
-                    <p class="small text-secondary mt-3">
-                        <em>Rankings are based on the latest LMSYS Chatbot Arena leaderboard data, reflecting real-world performance across thousands of user evaluations.</em>
+                    <div class="text-secondary">{{ explanation | simple_markdown | safe }}</div>
+                    <p class="small text-muted mt-3 mb-0">
+                        <em>💬 AI-generated explanation based on LMSYS Chatbot Arena leaderboard data.</em>
                     </p>
                 </div>
             </div>

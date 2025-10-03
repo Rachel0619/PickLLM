@@ -119,7 +119,7 @@ def build_full_leaderboard(leaderboard, metadata):
         'votes': lm['num_battles'].values.astype(int),
         'organization': lm['Organization'].values,
         'license': lm['License'].values,
-        'knowledge_cutoff': lm['Knowledge cutoff date'].replace('-', '').values,
+        'knowledge_cutoff': lm['Knowledge cutoff date'].astype(str).str.replace('-', 'not specified', regex=False).values,
         'url': lm['Link'].values,
     })
     return df

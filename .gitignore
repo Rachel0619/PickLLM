@@ -209,5 +209,5 @@ __marimo__/
 # PickLLM specific
 # Ignore cloned LMArena repository and generated data
 lmarena/
-csv/
 data/
+notebooks/

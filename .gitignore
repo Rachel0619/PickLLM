@@ -211,7 +211,6 @@ __marimo__/
 lmarena/
 data/
 notebooks/
-images/
 
 # Hugging Face Space specific files (not needed on GitHub)
 README_HF.md

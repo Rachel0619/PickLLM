@@ -25,6 +25,11 @@ jobs:
           cp README_HF.md README.md
           git add README.md
 
+      - name: Remove images for HF deployment
+        run: |
+          git rm -r --cached images/ || true
+          rm -rf images/
+
       - name: Push to Hugging Face
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}

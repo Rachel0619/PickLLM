@@ -1,4 +1,4 @@
-![PickLLM Hero Image](./images/cover.png)
+# PickLLM
 
 ## 📝 What is PickLLM?
 

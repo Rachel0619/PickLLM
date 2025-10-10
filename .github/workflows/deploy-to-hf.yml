@@ -23,7 +23,9 @@ jobs:
       - name: Replace README with HF version
         run: |
           cp README_HF.md README.md
+          rm README_HF.md
           git add README.md
+          git rm README_HF.md || true
           git commit -m "Use HF README for deployment" || true
 
       - name: Remove images from entire git history

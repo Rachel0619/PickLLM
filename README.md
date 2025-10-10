@@ -1,17 +1,3 @@
----
-title: PickLLM
-emoji: 🌍
-colorFrom: red
-colorTo: pink
-sdk: docker
-pinned: false
-license: apache-2.0
-short_description: find the best LLM for your specific use case
----
-
-<<<<<<< HEAD
-Check out the configuration reference at https://huggingface.co/docs/hub/spaces-config-reference
-=======
 ![PickLLM Hero Image](./images/cover.png)
 
 ## 📝 What is PickLLM?
@@ -227,9 +213,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [ ] **Phase 2:** Advanced filtering and comparison features
 - [ ] **Phase 3:** LLM database integration with real-time data
 - [ ] **Phase 4:** API access for developers
-<<<<<<< HEAD
-- [ ] **Phase 5:** Mobile app
->>>>>>> 033a037 (initial commit)
-=======
 - [ ] **Phase 5:** Mobile app and advanced analytics
->>>>>>> 933673b (added POC)

@@ -24,6 +24,13 @@ jobs:
         run: |
           cp README_HF.md README.md
           git add README.md
+          git commit -m "Use HF README for deployment" || true
+
+      - name: Remove all images from git history
+        env:
+          FILTER_BRANCH_SQUELCH_WARNING: 1
+        run: |
+          git filter-branch -f --index-filter 'git rm -r --cached --ignore-unmatch images/ images_temp/' --prune-empty -- --all
 
       - name: Push to Hugging Face
         env:

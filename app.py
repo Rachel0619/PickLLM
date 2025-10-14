@@ -10,6 +10,7 @@ load_dotenv()
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 from recommendation_engine import RecommendationEngine
 from recommendation_explainer import RecommendationExplainer
+from rag import RAGChatbot
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
@@ -17,6 +18,17 @@ app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-producti
 # Initialize recommendation engine and explainer
 recommendation_engine = RecommendationEngine()
 recommendation_explainer = RecommendationExplainer()
+
+# Initialize RAG chatbot (lazy initialization on first request)
+rag_chatbot = None
+
+def get_chatbot():
+    """Get or initialize the RAG chatbot"""
+    global rag_chatbot
+    if rag_chatbot is None:
+        rag_chatbot = RAGChatbot()
+        rag_chatbot.initialize()
+    return rag_chatbot
 
 # Custom Jinja filter for simple markdown rendering
 import re
@@ -105,6 +117,31 @@ def results():
 def health_check():
     """Health check endpoint"""
     return jsonify({"status": "healthy", "service": "PickLLM"})
+
+@app.route('/api/chat', methods=['POST'])
+def chat():
+    """Chatbot endpoint for answering user questions"""
+    try:
+        data = request.get_json()
+        query = data.get('message', '').strip()
+
+        if not query:
+            return jsonify({"error": "Message is required"}), 400
+
+        # Get chatbot and generate response
+        chatbot = get_chatbot()
+        response = chatbot.chat(query)
+
+        return jsonify({
+            "response": response,
+            "status": "success"
+        })
+    except Exception as e:
+        print(f"Error in chat endpoint: {e}")
+        return jsonify({
+            "error": "Sorry, I encountered an error processing your question.",
+            "status": "error"
+        }), 500
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5555)

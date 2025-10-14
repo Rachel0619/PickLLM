@@ -10,7 +10,6 @@ load_dotenv()
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 from recommendation_engine import RecommendationEngine
 from recommendation_explainer import RecommendationExplainer
-from rag import RAGChatbot
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
@@ -21,14 +20,29 @@ recommendation_explainer = RecommendationExplainer()
 
 # Initialize RAG chatbot (lazy initialization on first request)
 rag_chatbot = None
+chatbot_initialized = False
+chatbot_error = None
 
 def get_chatbot():
     """Get or initialize the RAG chatbot"""
-    global rag_chatbot
-    if rag_chatbot is None:
+    global rag_chatbot, chatbot_initialized, chatbot_error
+
+    if chatbot_initialized:
+        return rag_chatbot
+
+    try:
+        print("🤖 Initializing RAG chatbot...")
+        from rag import RAGChatbot
         rag_chatbot = RAGChatbot()
         rag_chatbot.initialize()
-    return rag_chatbot
+        chatbot_initialized = True
+        print("✅ RAG chatbot initialized successfully")
+        return rag_chatbot
+    except Exception as e:
+        chatbot_error = str(e)
+        chatbot_initialized = True  # Mark as initialized to avoid retrying
+        print(f"❌ Failed to initialize chatbot: {e}")
+        return None
 
 # Custom Jinja filter for simple markdown rendering
 import re
@@ -130,6 +144,13 @@ def chat():
 
         # Get chatbot and generate response
         chatbot = get_chatbot()
+
+        if chatbot is None:
+            return jsonify({
+                "response": "Sorry, the chatbot is currently unavailable. Please try again later or contact support.",
+                "status": "success"
+            })
+
         response = chatbot.chat(query)
 
         return jsonify({
@@ -137,11 +158,13 @@ def chat():
             "status": "success"
         })
     except Exception as e:
-        print(f"Error in chat endpoint: {e}")
+        print(f"❌ Error in chat endpoint: {e}")
+        import traceback
+        traceback.print_exc()
         return jsonify({
-            "error": "Sorry, I encountered an error processing your question.",
-            "status": "error"
-        }), 500
+            "response": "Sorry, I encountered an error processing your question. Please try again.",
+            "status": "success"
+        })
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5555)

@@ -335,21 +335,28 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ message: message })
+                    body: JSON.stringify({ message: message }),
+                    signal: AbortSignal.timeout(60000) // 60 second timeout
                 });
 
                 const data = await response.json();
                 removeTyping();
 
-                if (data.status === 'success') {
+                if (data.status === 'success' && data.response) {
                     addMessage(data.response);
+                } else if (data.error) {
+                    addMessage(data.error);
                 } else {
                     addMessage('Sorry, I encountered an error. Please try again.');
                 }
             } catch (error) {
                 console.error('Chat error:', error);
                 removeTyping();
-                addMessage('Sorry, I encountered an error. Please try again.');
+                if (error.name === 'TimeoutError') {
+                    addMessage('Sorry, the request timed out. The chatbot may be initializing. Please try again in a moment.');
+                } else {
+                    addMessage('Sorry, I encountered an error. Please try again later.');
+                }
             } finally {
                 // Re-enable input
                 chatbotInput.disabled = false;

@@ -132,6 +132,36 @@ def health_check():
     """Health check endpoint"""
     return jsonify({"status": "healthy", "service": "PickLLM"})
 
+@app.route('/debug-chatbot')
+def debug_chatbot():
+    """Debug endpoint to check chatbot initialization"""
+    import traceback
+    try:
+        chatbot = get_chatbot()
+        if chatbot is None:
+            return f"""
+            <h1>Chatbot Debug Info</h1>
+            <p><strong>Status:</strong> Failed to initialize</p>
+            <p><strong>Initialized:</strong> {chatbot_initialized}</p>
+            <p><strong>Available:</strong> {rag_chatbot is not None}</p>
+            <p><strong>Error:</strong> {chatbot_error}</p>
+            """, 500
+        else:
+            return f"""
+            <h1>Chatbot Debug Info</h1>
+            <p><strong>Status:</strong> ✅ Successfully initialized</p>
+            <p><strong>Chunks loaded:</strong> {len(chatbot.chunks) if chatbot.chunks else 'N/A'}</p>
+            <p><strong>Model loaded:</strong> {chatbot.embedding_model is not None}</p>
+            """
+    except Exception as e:
+        error_trace = traceback.format_exc()
+        return f"""
+        <h1>Chatbot Debug Info</h1>
+        <p><strong>Status:</strong> ❌ Exception occurred</p>
+        <p><strong>Error:</strong> {str(e)}</p>
+        <pre>{error_trace}</pre>
+        """, 500
+
 @app.route('/api/chat', methods=['POST'])
 def chat():
     """Chatbot endpoint for answering user questions"""

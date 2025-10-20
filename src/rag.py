@@ -14,6 +14,11 @@ import numpy as np
 
 load_dotenv()
 
+# Set cache directories for HuggingFace Spaces compatibility
+os.environ['TRANSFORMERS_CACHE'] = os.environ.get('TRANSFORMERS_CACHE', '/tmp/.cache/huggingface')
+os.environ['HF_HOME'] = os.environ.get('HF_HOME', '/tmp/.cache/huggingface')
+os.environ['SENTENCE_TRANSFORMERS_HOME'] = os.environ.get('SENTENCE_TRANSFORMERS_HOME', '/tmp/.cache/sentence-transformers')
+
 class RAGChatbot:
     def __init__(self):
         self.embedding_model = None

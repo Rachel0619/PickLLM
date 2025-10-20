@@ -136,30 +136,65 @@ def health_check():
 def debug_chatbot():
     """Debug endpoint to check chatbot initialization"""
     import traceback
+    import os
+
+    # Check environment variables
+    has_openrouter_key = 'OPENROUTER_API_KEY' in os.environ
+    key_preview = os.environ.get('OPENROUTER_API_KEY', '')[:15] + '...' if has_openrouter_key else 'NOT SET'
+
     try:
         chatbot = get_chatbot()
         if chatbot is None:
             return f"""
-            <h1>Chatbot Debug Info</h1>
-            <p><strong>Status:</strong> Failed to initialize</p>
-            <p><strong>Initialized:</strong> {chatbot_initialized}</p>
-            <p><strong>Available:</strong> {rag_chatbot is not None}</p>
-            <p><strong>Error:</strong> {chatbot_error}</p>
+            <html>
+            <head><title>Chatbot Debug</title></head>
+            <body style="font-family: monospace; padding: 20px;">
+            <h1>🔍 Chatbot Debug Info</h1>
+            <h2>Status: ❌ Failed to initialize</h2>
+            <table border="1" cellpadding="10">
+                <tr><td><strong>Initialized Flag:</strong></td><td>{chatbot_initialized}</td></tr>
+                <tr><td><strong>Chatbot Object:</strong></td><td>{rag_chatbot is not None}</td></tr>
+                <tr><td><strong>OPENROUTER_API_KEY:</strong></td><td>{key_preview}</td></tr>
+                <tr><td><strong>Initialization Error:</strong></td><td><pre>{chatbot_error if chatbot_error else 'No error captured'}</pre></td></tr>
+            </table>
+            <br>
+            <a href="/">Back to Home</a>
+            </body>
+            </html>
             """, 500
         else:
             return f"""
-            <h1>Chatbot Debug Info</h1>
-            <p><strong>Status:</strong> ✅ Successfully initialized</p>
-            <p><strong>Chunks loaded:</strong> {len(chatbot.chunks) if chatbot.chunks else 'N/A'}</p>
-            <p><strong>Model loaded:</strong> {chatbot.embedding_model is not None}</p>
+            <html>
+            <head><title>Chatbot Debug</title></head>
+            <body style="font-family: monospace; padding: 20px;">
+            <h1>🔍 Chatbot Debug Info</h1>
+            <h2>Status: ✅ Successfully initialized</h2>
+            <table border="1" cellpadding="10">
+                <tr><td><strong>Chunks loaded:</strong></td><td>{len(chatbot.chunks) if chatbot.chunks else 'N/A'}</td></tr>
+                <tr><td><strong>Embedding model loaded:</strong></td><td>{chatbot.embedding_model is not None}</td></tr>
+                <tr><td><strong>Vector index built:</strong></td><td>{chatbot.repo_vindex is not None}</td></tr>
+                <tr><td><strong>LLM Model:</strong></td><td>{chatbot.model}</td></tr>
+                <tr><td><strong>OPENROUTER_API_KEY:</strong></td><td>{key_preview}</td></tr>
+            </table>
+            <br>
+            <a href="/">Back to Home</a>
+            </body>
+            </html>
             """
     except Exception as e:
         error_trace = traceback.format_exc()
         return f"""
-        <h1>Chatbot Debug Info</h1>
-        <p><strong>Status:</strong> ❌ Exception occurred</p>
+        <html>
+        <head><title>Chatbot Debug</title></head>
+        <body style="font-family: monospace; padding: 20px;">
+        <h1>🔍 Chatbot Debug Info</h1>
+        <h2>Status: ❌ Exception occurred</h2>
         <p><strong>Error:</strong> {str(e)}</p>
-        <pre>{error_trace}</pre>
+        <pre style="background: #f5f5f5; padding: 15px; overflow: auto;">{error_trace}</pre>
+        <br>
+        <a href="/">Back to Home</a>
+        </body>
+        </html>
         """, 500
 
 @app.route('/api/chat', methods=['POST'])

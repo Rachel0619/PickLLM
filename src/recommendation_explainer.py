@@ -17,58 +17,7 @@ class RecommendationExplainer:
             api_key=api_key,
         )
         self.model = "z-ai/glm-4.5-air:free"
-
-    def generate_explanation(
-        self,
-        use_case: str,
-        recommendations: List[Dict],
-        visual_ai_type: Optional[str] = None,
-        model_type: Optional[str] = None
-    ) -> str:
-        """
-        Generate a natural language explanation for why these models were recommended.
-
-        Args:
-            use_case: User's primary use case
-            recommendations: List of top 3 recommended models with their details
-            visual_ai_type: Visual AI type if applicable
-            model_type: Model type preference (open/proprietary/no preference)
-
-        Returns:
-            Natural language explanation (2-3 paragraphs)
-        """
-        # Build the prompt
-        prompt = self._build_prompt(use_case, recommendations, visual_ai_type, model_type)
-
-        try:
-            completion = self.client.chat.completions.create(
-                extra_headers={
-                    "HTTP-Referer": "https://pickllm.com",
-                    "X-Title": "PickLLM",
-                },
-                model=self.model,
-                messages=[
-                    {
-                        "role": "system",
-                        "content": "You are an AI assistant helping users understand LLM recommendations. Provide clear, concise explanations in 2-3 paragraphs."
-                    },
-                    {
-                        "role": "user",
-                        "content": prompt
-                    }
-                ],
-                temperature=0.7,
-                max_tokens=1000
-            )
-
-            explanation = completion.choices[0].message.content
-            return explanation
-
-        except Exception as e:
-            print(f"Error generating explanation: {e}")
-            # Fallback to static explanation
-            return self._get_fallback_explanation(use_case, recommendations)
-
+    
     def _build_prompt(
         self,
         use_case: str,
@@ -127,6 +76,57 @@ Please write a 3-paragraph explanation following this structure:
 Keep it concise, informative, and user-friendly. Avoid repeating data already visible in the cards."""
 
         return prompt
+
+    def generate_explanation(
+        self,
+        use_case: str,
+        recommendations: List[Dict],
+        visual_ai_type: Optional[str] = None,
+        model_type: Optional[str] = None
+    ) -> str:
+        """
+        Generate a natural language explanation for why these models were recommended.
+
+        Args:
+            use_case: User's primary use case
+            recommendations: List of top 3 recommended models with their details
+            visual_ai_type: Visual AI type if applicable
+            model_type: Model type preference (open/proprietary/no preference)
+
+        Returns:
+            Natural language explanation (2-3 paragraphs)
+        """
+        # Build the prompt
+        prompt = self._build_prompt(use_case, recommendations, visual_ai_type, model_type)
+
+        try:
+            completion = self.client.chat.completions.create(
+                extra_headers={
+                    "HTTP-Referer": "https://pickllm.com",
+                    "X-Title": "PickLLM",
+                },
+                model=self.model,
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "You are an AI assistant helping users understand LLM recommendations. Provide clear, concise explanations in 2-3 paragraphs."
+                    },
+                    {
+                        "role": "user",
+                        "content": prompt
+                    }
+                ],
+                temperature=0.7,
+                max_tokens=1000
+            )
+
+            explanation = completion.choices[0].message.content
+            return explanation
+
+        except Exception as e:
+            print(f"Error generating explanation: {e}")
+            # Fallback to static explanation
+            return self._get_fallback_explanation(use_case, recommendations)
 
     def _get_fallback_explanation(self, use_case: str, recommendations: List[Dict]) -> str:
         """Provide a static fallback explanation if API fails."""

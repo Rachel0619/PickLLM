@@ -16,11 +16,19 @@ load_dotenv()
 
 class RAGChatbot:
     def __init__(self):
-        self.client = OpenAI()
         self.embedding_model = None
         self.chunks = None
         self.embeddings = None
         self.repo_vindex = None
+        api_key = os.environ.get('OPENROUTER_API_KEY')
+        if not api_key:
+            raise ValueError("OPENROUTER_API_KEY environment variable not set")
+
+        self.client = OpenAI(
+            base_url="https://openrouter.ai/api/v1",
+            api_key=api_key,
+        )
+        self.model = "z-ai/glm-4.5-air:free"
 
     def initialize(self, repo_owner='Rachel0619', repo_name='PickLLM'):
         """Initialize the chatbot by loading and processing repository data"""
@@ -64,21 +72,6 @@ class RAGChatbot:
         zf.close()
         return repository_data
 
-    def _process_documents(self, data):
-        """Process documents into chunks"""
-        chunks = []
-        for doc in data:
-            doc_copy = doc.copy()
-            doc_content = doc_copy.pop('content', '')
-            if not doc_content:
-                continue
-            sections = self._split_markdown_by_level(doc_content, level=2)
-            for section in sections:
-                section_doc = doc_copy.copy()
-                section_doc['section'] = section
-                chunks.append(section_doc)
-        return chunks
-
     def _split_markdown_by_level(self, text, level=2):
         """
         Split markdown text by a specific header level.
@@ -116,6 +109,21 @@ class RAGChatbot:
             sections.append(section)
 
         return sections
+
+    def _process_documents(self, data):
+        """Process documents into chunks"""
+        chunks = []
+        for doc in data:
+            doc_copy = doc.copy()
+            doc_content = doc_copy.pop('content', '')
+            if not doc_content:
+                continue
+            sections = self._split_markdown_by_level(doc_content, level=3)
+            for section in sections:
+                section_doc = doc_copy.copy()
+                section_doc['section'] = section
+                chunks.append(section_doc)
+        return chunks
 
     def _build_index(self):
         """Build vector search index from chunks"""
@@ -161,28 +169,39 @@ Instructions:
         """
         Main chat interface - takes a user query and returns a response
         """
+
         try:
             # Search for relevant context
             context = self._vector_search(query, num_results=2)
-
             # Format prompt and call LLM
             prompt = self._format_prompt(query, context)
-            response = self.client.chat.completions.create(
-                model="gpt-4o-mini",
+            completion = self.client.chat.completions.create(
+                extra_headers={
+                    "HTTP-Referer": "https://pickllm.com",
+                    "X-Title": "PickLLM",
+                },
+                model=self.model,
                 messages=[
+                    {
+                        "role": "system",
+                        "content": "You are an AI assistant helping users understand how PickLLM works"
+                    },
                     {
                         "role": "user",
                         "content": prompt
                     }
                 ],
-                max_tokens=150,
-                temperature=0.7
+                temperature=0.7,
+                max_tokens=1000
             )
 
-            return response.choices[0].message.content
+            answer = completion.choices[0].message.content
+            return answer
+
         except Exception as e:
             print(f"Error in chat: {e}")
             return "I'm sorry, I encountered an error processing your question. Please try again."
+
 
 if __name__ == "__main__":
     # Test the chatbot
@@ -190,7 +209,8 @@ if __name__ == "__main__":
     chatbot.initialize('Rachel0619', 'PickLLM')
 
     # Test query
-    query = "What data are you using to support the recommendation?"
+    query = "What dataset are you using to support the recommendation?"
+    print(chatbot._vector_search(query, num_results=1))
     response = chatbot.chat(query)
     print(f"Q: {query}")
     print(f"A: {response}")

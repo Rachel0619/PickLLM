@@ -199,7 +199,10 @@ Instructions:
             return answer
 
         except Exception as e:
-            print(f"Error in chat: {e}")
+            import traceback
+            error_trace = traceback.format_exc()
+            print(f"❌ Error in chat: {e}")
+            print(f"❌ Full traceback:\n{error_trace}")
             return "I'm sorry, I encountered an error processing your question. Please try again."
 
 

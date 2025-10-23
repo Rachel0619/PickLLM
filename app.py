@@ -10,6 +10,7 @@ load_dotenv()
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 from recommendation_engine import RecommendationEngine
 from recommendation_explainer import RecommendationExplainer
+from use_case_helper import UseCaseHelper
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
@@ -17,6 +18,7 @@ app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-producti
 # Initialize recommendation engine and explainer
 recommendation_engine = RecommendationEngine()
 recommendation_explainer = RecommendationExplainer()
+use_case_helper = UseCaseHelper()
 
 # Initialize RAG chatbot (lazy initialization on first request)
 rag_chatbot = None
@@ -132,71 +134,6 @@ def health_check():
     """Health check endpoint"""
     return jsonify({"status": "healthy", "service": "PickLLM"})
 
-@app.route('/debug-chatbot')
-def debug_chatbot():
-    """Debug endpoint to check chatbot initialization"""
-    import traceback
-    import os
-
-    # Check environment variables
-    has_openrouter_key = 'OPENROUTER_API_KEY' in os.environ
-    key_preview = os.environ.get('OPENROUTER_API_KEY', '')[:15] + '...' if has_openrouter_key else 'NOT SET'
-
-    try:
-        chatbot = get_chatbot()
-        if chatbot is None:
-            return f"""
-            <html>
-            <head><title>Chatbot Debug</title></head>
-            <body style="font-family: monospace; padding: 20px;">
-            <h1>🔍 Chatbot Debug Info</h1>
-            <h2>Status: ❌ Failed to initialize</h2>
-            <table border="1" cellpadding="10">
-                <tr><td><strong>Initialized Flag:</strong></td><td>{chatbot_initialized}</td></tr>
-                <tr><td><strong>Chatbot Object:</strong></td><td>{rag_chatbot is not None}</td></tr>
-                <tr><td><strong>OPENROUTER_API_KEY:</strong></td><td>{key_preview}</td></tr>
-                <tr><td><strong>Initialization Error:</strong></td><td><pre>{chatbot_error if chatbot_error else 'No error captured'}</pre></td></tr>
-            </table>
-            <br>
-            <a href="/">Back to Home</a>
-            </body>
-            </html>
-            """, 500
-        else:
-            return f"""
-            <html>
-            <head><title>Chatbot Debug</title></head>
-            <body style="font-family: monospace; padding: 20px;">
-            <h1>🔍 Chatbot Debug Info</h1>
-            <h2>Status: ✅ Successfully initialized</h2>
-            <table border="1" cellpadding="10">
-                <tr><td><strong>Chunks loaded:</strong></td><td>{len(chatbot.chunks) if chatbot.chunks else 'N/A'}</td></tr>
-                <tr><td><strong>Embedding model loaded:</strong></td><td>{chatbot.embedding_model is not None}</td></tr>
-                <tr><td><strong>Vector index built:</strong></td><td>{chatbot.repo_vindex is not None}</td></tr>
-                <tr><td><strong>LLM Model:</strong></td><td>{chatbot.model}</td></tr>
-                <tr><td><strong>OPENROUTER_API_KEY:</strong></td><td>{key_preview}</td></tr>
-            </table>
-            <br>
-            <a href="/">Back to Home</a>
-            </body>
-            </html>
-            """
-    except Exception as e:
-        error_trace = traceback.format_exc()
-        return f"""
-        <html>
-        <head><title>Chatbot Debug</title></head>
-        <body style="font-family: monospace; padding: 20px;">
-        <h1>🔍 Chatbot Debug Info</h1>
-        <h2>Status: ❌ Exception occurred</h2>
-        <p><strong>Error:</strong> {str(e)}</p>
-        <pre style="background: #f5f5f5; padding: 15px; overflow: auto;">{error_trace}</pre>
-        <br>
-        <a href="/">Back to Home</a>
-        </body>
-        </html>
-        """, 500
-
 @app.route('/api/chat', methods=['POST'])
 def chat():
     """Chatbot endpoint for answering user questions"""
@@ -230,6 +167,50 @@ def chat():
             "response": "Sorry, I encountered an error processing your question. Please try again.",
             "status": "success"
         })
+
+@app.route('/api/suggest-use-case', methods=['POST'])
+def suggest_use_case():
+    """Endpoint to suggest use case category based on user description"""
+    try:
+        data = request.get_json()
+        description = data.get('description', '').strip()
+
+        if not description:
+            return jsonify({"error": "Description is required"}), 400
+
+        # Get use case suggestion from AI
+        suggested_category = use_case_helper.use_case_classification(description)
+
+        if not suggested_category:
+            return jsonify({
+                "error": "Failed to classify use case. Please try again.",
+                "status": "error"
+            }), 500
+
+        # Map category to display label
+        category_labels = {
+            'conversational_knowledge': 'Conversational & Knowledge Agents',
+            'productivity_information': 'Productivity & Information Handling',
+            'creative_content': 'Creative & Content Generation',
+            'technical_developer': 'Technical & Developer Tools',
+            'advanced_automation': 'Advanced Automation',
+            'visual_ai': 'Visual AI'
+        }
+
+        return jsonify({
+            "category": suggested_category,
+            "label": category_labels.get(suggested_category, suggested_category),
+            "status": "success"
+        })
+
+    except Exception as e:
+        print(f"❌ Error in suggest-use-case endpoint: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            "error": "An error occurred while processing your request.",
+            "status": "error"
+        }), 500
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5555)

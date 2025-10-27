@@ -30,21 +30,21 @@ class RecommendationEngine:
             'Stability AI': 'stability.png',
         }
 
-        # Mapping from questionnaire choices to CSV files
+        # Mapping from questionnaire choices to CSV files (with pricing data)
         self.use_case_mapping = {
-            'conversational_knowledge': ['lmarena_text.csv'],
-            'productivity_information': ['lmarena_text.csv'],
-            'creative_content': ['lmarena_text.csv'],
-            'technical_developer': ['lmarena_webdev.csv'],
-            'advanced_automation': ['lmarena_text.csv'],
-            'visual_ai': ['lmarena_vision.csv', 'lmarena_image.csv', 'lmarena_image-edit.csv']
+            'conversational_knowledge': ['lmarena_text_with_pricing_or.csv'],
+            'productivity_information': ['lmarena_text_with_pricing_or.csv'],
+            'creative_content': ['lmarena_text_with_pricing_or.csv'],
+            'technical_developer': ['lmarena_webdev_with_pricing_or.csv'],
+            'advanced_automation': ['lmarena_text_with_pricing_or.csv'],
+            'visual_ai': ['lmarena_vision_with_pricing_or.csv', 'lmarena_image_with_pricing.csv', 'lmarena_image-edit_with_pricing.csv']
         }
 
         # Visual AI sub-category mapping
         self.visual_ai_mapping = {
-            'image_understanding': ['lmarena_vision.csv'],
-            'image_generation': ['lmarena_image.csv'],
-            'image_editing': ['lmarena_image-edit.csv']
+            'image_understanding': ['lmarena_vision_with_pricing_or.csv'],
+            'image_generation': ['lmarena_image_with_pricing.csv'],
+            'image_editing': ['lmarena_image-edit_with_pricing.csv']
         }
 
     def get_relevant_csv_files(self, use_case: str, visual_ai_type: Optional[str] = None) -> List[str]:
@@ -155,7 +155,7 @@ class RecommendationEngine:
 
             model_info = {
                 'rank': int(row.get('rank', idx + 1)),
-                'model': row.get('model', 'Unknown'),
+                'model': row.get('displayed_name', row.get('model', 'Unknown')),  # Use displayed_name if available
                 'arena_score': row.get('arena_score', 'N/A'),
                 'votes': row.get('votes', 'N/A'),
                 'organization': organization,
@@ -163,7 +163,8 @@ class RecommendationEngine:
                 'url': row.get('url', ''),
                 'ci': row.get('95_pct_ci', 'N/A'),
                 'logo_url': logo_url,
-                'knowledge_cutoff': row.get('knowledge_cutoff', 'N/A')
+                'knowledge_cutoff': row.get('knowledge_cutoff', 'N/A'),
+                'pricing': row.get('pricing', 'N/A')  # Add pricing information
             }
             recommendations.append(model_info)
 

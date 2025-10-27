@@ -140,7 +140,7 @@
                 <div class="progress mt-4 mb-2" style="height: 8px; background-color: #f1f5f9;">
                     <div class="progress-bar bg-warning" role="progressbar" style="width: 14%;" aria-valuenow="1" aria-valuemin="0" aria-valuemax="7" id="progressBar"></div>
                 </div>
-                <small class="text-muted" id="progressText">Question 1 of 6</small>
+                <small class="text-muted" id="progressText">Question 1 of 4</small>
             </div>
 
             <!-- Questionnaire Form -->
@@ -185,35 +185,11 @@
                             },
                             {
                                 'number': 4,
-                                'title': 'What are your response speed requirements?',
-                                'name': 'response_speed',
+                                'title': 'What do you value more?',
+                                'name': 'priority',
                                 'options': [
-                                    {'id': 'speed_realtime', 'value': 'realtime_streaming', 'label': 'Real‑time streaming'},
-                                    {'id': 'speed_fast', 'value': 'fast_1_2s', 'label': 'Fast (1–2s)'},
-                                    {'id': 'speed_moderate', 'value': 'moderate_2_5s', 'label': 'Moderate (2–5s)'},
-                                    {'id': 'speed_notcritical', 'value': 'not_critical_over_5s', 'label': 'Not critical (>5s fine)'}
-                                ]
-                            },
-                            {
-                                'number': 5,
-                                'title': "What's your budget priority?",
-                                'name': 'budget_priority',
-                                'options': [
-                                    {'id': 'budget_minimize', 'value': 'minimize_cost', 'label': 'Minimize cost'},
-                                    {'id': 'budget_value', 'value': 'best_value', 'label': 'Best value (cost/quality balance)'},
-                                    {'id': 'budget_premium', 'value': 'premium_quality', 'label': 'Premium quality even if expensive'},
-                                    {'id': 'budget_unsure', 'value': 'not_sure', 'label': 'Not sure'}
-                                ]
-                            },
-                            {
-                                'number': 6,
-                                'title': 'What context length do you require?',
-                                'name': 'context_length',
-                                'options': [
-                                    {'id': 'ctx_short', 'value': 'short_le_8k', 'label': 'Short (≤8k tokens)'},
-                                    {'id': 'ctx_medium', 'value': 'medium_8k_32k', 'label': 'Medium (8k–32k)'},
-                                    {'id': 'ctx_long', 'value': 'long_32k_128k', 'label': 'Long (32k–128k)'},
-                                    {'id': 'ctx_huge', 'value': 'huge_ge_128k', 'label': 'Huge (≥128k)'}
+                                    {'id': 'priority_cost', 'value': 'lower_cost', 'label': 'Lower Cost - I want the most affordable option'},
+                                    {'id': 'priority_performance', 'value': 'better_performance', 'label': 'Better Performance - I want the highest quality results'}
                                 ]
                             }
                         ] %}
@@ -281,17 +257,6 @@
                         </div>
                         {% endfor %}
 
-                        <!-- Step 7: Optional Detailed Description -->
-                        <div class="mb-4 step d-none" data-step="7" data-name="description" data-required="false">
-                            <label for="description" class="form-label question-title text-center">
-                                Additional details about your use case (optional)
-                            </label>
-                            <textarea class="form-control bg-light border-warning"
-                                      id="description"
-                                      name="description"
-                                      rows="3"
-                                      placeholder="Tell us more about your specific requirements, constraints, or use case details..."></textarea>
-                        </div>
 
                         <!-- Navigation Buttons -->
                         <div class="d-flex justify-content-between align-items-center mt-4">

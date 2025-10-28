@@ -1,0 +1,16 @@
+rank,rank_stylectrl,model,openrouter_id,displayed_name,arena_score,95_pct_ci,votes,organization,license,knowledge_cutoff,url,pricing
+1,2,Imagen-4.0-ultra-generate-preview-06-06,imagen-4.0-ultra-generate-001,imagen-4.0-ultra-generate-001,1132,+1/-1,251222,Google,Proprietary,not specified,https://cloud.google.com/vertex-ai/generative-ai/docs/models/imagen/4-0-ultra-generate-preview-06-06,0.06
+2,3,GPT-Image-1,GPT Image 1,GPT Image 1,1124,+3/-3,151657,OpenAI,Proprietary,not specified,https://platform.openai.com/docs/models/gpt-image-1,0.063
+3,7,Seedream 3.0,Seedream 3.0,Seedream 3.0,1076,+2/-2,199830,Bytedance,Proprietary,not specified,https://seed.bytedance.com/en/tech/seedream3_0,0.018
+4,8,FLUX-1-Kontext-Max,FLUX-1-Kontext-Max,FLUX-1-Kontext-Max,1073,+2/-2,78058,Black Forest Labs,Proprietary,not specified,https://bfl.ai/announcements/flux-1-kontext,0.08
+5,10,Imagen-3.0-generate-002,Imagen 3,Imagen 3,1061,+2/-2,292356,Google,Proprietary,not specified,https://deepmind.google/technologies/imagen-3/,0.04
+6,11,FLUX-1-Kontext-Pro,FLUX-1-Kontext-Pro,FLUX-1-Kontext-Pro,1050,+2/-2,208059,Black Forest Labs,Proprietary,not specified,https://bfl.ai/announcements/flux-1-kontext,0.04
+7,13,Luma Photon,Luma Photon,Luma Photon,1034,+2/-2,221259,Luma AI,Proprietary,not specified,https://replicate.com/luma/photon,0.015
+8,13,Ideogram 3.0 (quality),Ideogram 3.0 (quality),Ideogram 3.0 (quality),1030,+2/-2,202901,Ideogram,Proprietary,not specified,https://about.ideogram.ai/3.0,0.06
+9,16,Recraft V3,Recraft V3,Recraft V3,1020,+2/-2,293230,Recraft,Proprietary,not specified,https://www.recraft.ai/blog/recraft-introduces-a-revolutionary-ai-model-that-thinks-in-design-language,0.04
+10,18,Ideogram 2.0,Ideogram 2.0,Ideogram 2.0,1010,+2/-2,279929,Ideogram,Proprietary,not specified,https://replicate.com/ideogram-ai/ideogram-v2,0.08
+11,18,FLUX1.1 [pro],FLUX1.1 [pro],FLUX1.1 [pro],1006,+2/-2,264501,Black Forest Labs,Proprietary,not specified,https://replicate.com/black-forest-labs/flux-1.1-pro,0.04
+12,20,Gemini-2.0-Flash-Preview-Image-Generation,gemini-2.0-flash,gemini-2.0-flash,986,+3/-3,179306,Google,Proprietary,not specified,https://aistudio.google.com/app/prompts/new_chat?model=gemini-2.0-flash-preview-image-generation,0.039
+13,22,FLUX.1 [dev] (fp8),,FLUX.1 [dev] (fp8),968,+3/-3,50585,Black Forest Labs,Open,not specified,https://fireworks.ai/models/fireworks/flux-1-dev-fp8,0
+14,24,Stable Diffusion 3.5 Large,,Stable Diffusion 3.5 Large,937,+3/-3,24050,Stability AI,Open,not specified,https://fal.ai/models/fal-ai/stable-diffusion-v35-large,0
+15,25,BAGEL,,BAGEL,914,+5/-5,12351,Bytedance,Apache 2.0,not specified,https://huggingface.co/ByteDance-Seed/BAGEL-7B-MoT,0

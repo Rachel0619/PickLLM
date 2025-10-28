@@ -207,9 +207,12 @@ marimo/_lsp/
 __marimo__/
 
 # PickLLM specific
-# Ignore cloned LMArena repository and generated data
+# Ignore cloned LMArena repository and intermediate data files
 lmarena/
-data/
+data/*
+# But keep the essential pricing CSV files for deployment
+!data/lmarena_*_with_pricing*.csv
+!data/.gitkeep
 notebooks/
 
 # Hugging Face Space specific files (not needed on GitHub)

@@ -1,6 +1,6 @@
 # PickLLM
 
-🚀 **[Try it live on Hugging Face Spaces!](https://huggingface.co/spaces/YOUR_USERNAME/PickLLM)**
+🚀 **[Try it live on Hugging Face Spaces!](https://huggingface.co/spaces/Rachel0619/PickLLM)**
 
 ## 📝 What is PickLLM?
 

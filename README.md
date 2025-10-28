@@ -1,5 +1,7 @@
 # PickLLM
 
+🚀 **[Try it live on Hugging Face Spaces!](https://huggingface.co/spaces/YOUR_USERNAME/PickLLM)**
+
 ## 📝 What is PickLLM?
 
 PickLLM helps users find the right large language model (LLM) for their specific use case. Instead of drowning in technical benchmarks and scattered metrics, PickLLM provides actionable recommendations tailored to your needs.
@@ -37,8 +39,10 @@ Landing Page → Questionnaire → Backend Analysis → Results → Your Perfect
 - **Backend:** Flask (Python)
 - **Frontend:** Jinja2 Templates + Bootstrap 5
 - **Styling:** Custom CSS + Bootstrap
+- **Data Processing:** Pandas, OpenRouter API integration
+- **AI/ML:** OpenRouter API (LLM explanations), Sentence Transformers (RAG embeddings), Minsearch (vector search)
 - **Package Management:** uv
-- **Deployment:** Vercel, AWS/GCP/Azure
+- **Deployment:** Hugging Face Spaces (Docker)
 
 ## ⚡ Quick Start
 
@@ -130,17 +134,17 @@ Our questionnaire consists of 8 core questions plus an optional description fiel
 
 ➡️ If the user selects “Visual AI” show:
 
-**2. What type of Visual AI do you need?**
+**What type of Visual AI do you need?**
 - Image Understanding (describe/analyze inputs)
 - Image Generation (create from text prompts)
 - Image Editing (modify existing images)
 
-**3. Model Type Preference**
+**2. Model Type Preference**
 - Open weights only (self-hostable)
 - Proprietary only with enterprise SLA
 - No preference
 
-**4. What do you value more?**
+**3. What do you value more?**
 - Lower Cost - I want the most affordable option
 - Better Performance - I want the highest quality results
 

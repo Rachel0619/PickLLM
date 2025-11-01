@@ -56,7 +56,7 @@ Landing Page → Questionnaire → Backend Analysis → Results → Your Perfect
 - **Package Management:** uv
 - **Deployment:** Hugging Face Spaces (Docker)
 
-## ⚡ Quick Start
+## ⚡ Developer Quick Start
 
 ### Prerequisites
 

@@ -218,3 +218,11 @@ notebooks/
 # Hugging Face Space specific files (not needed on GitHub)
 README_HF.md
 readme_space.md
+
+# User feedback outputs (keep example files, ignore new feedback)
+# Keep the example feedback files for documentation
+!outputs/thumbs_up/feedback_20250101_*.json
+!outputs/thumbs_down/feedback_20250101_*.json
+# Ignore all other feedback files
+outputs/thumbs_up/feedback_*.json
+outputs/thumbs_down/feedback_*.json

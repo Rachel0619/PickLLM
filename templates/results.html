@@ -59,6 +59,31 @@
             </div>
             {% endif %}
 
+            <!-- Feedback Section -->
+            <div class="card bg-light border-0 mt-4 shadow-sm" id="feedback-section">
+                <div class="card-body text-center py-4">
+                    <h6 class="mb-3 text-secondary">How helpful were these recommendations?</h6>
+                    <div class="d-flex justify-content-center gap-3" id="feedback-buttons">
+                        <button class="btn btn-outline-success btn-lg" id="thumbs-up-btn" onclick="submitFeedback('up')">
+                            👍 Helpful
+                        </button>
+                        <button class="btn btn-outline-danger btn-lg" id="thumbs-down-btn" onclick="submitFeedback('down')">
+                            👎 Not Helpful
+                        </button>
+                    </div>
+                    <div id="feedback-message" class="mt-3 d-none">
+                        <div class="alert alert-success mb-0">
+                            <strong>Thank you for your feedback!</strong> Your input helps us improve PickLLM.
+                        </div>
+                    </div>
+                    <div id="feedback-form" class="mt-3 d-none">
+                        <textarea class="form-control mb-2" id="feedback-comment" rows="3" placeholder="What could we improve? (optional)"></textarea>
+                        <button class="btn btn-primary-custom" onclick="submitFeedbackWithComment()">Submit Feedback</button>
+                        <button class="btn btn-outline-secondary" onclick="cancelFeedback()">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
             <!-- Action Buttons -->
             <div class="text-center mt-5">
                 <a href="/questionnaire" class="btn btn-outline-dark me-3">
@@ -75,7 +100,74 @@
 
 {% block scripts %}
 <script>
-    // Future: Add comparison features, detailed specs, etc.
+    // Store feedback data
+    let feedbackType = null;
+
+    // User data and recommendations for feedback submission
+    const feedbackData = {
+        use_case: "{{ use_case }}",
+        visual_ai_type: "{{ visual_ai_type }}",
+        recommendations: {{ recommendations | tojson | safe }},
+        explanation: {{ explanation | tojson | safe }},
+        user_data: {{ user_data | tojson | safe }}
+    };
+
+    function submitFeedback(type) {
+        feedbackType = type;
+
+        if (type === 'down') {
+            // For negative feedback, show comment form
+            document.getElementById('feedback-buttons').classList.add('d-none');
+            document.getElementById('feedback-form').classList.remove('d-none');
+        } else {
+            // For positive feedback, submit immediately
+            sendFeedback(type, null);
+        }
+    }
+
+    function submitFeedbackWithComment() {
+        const comment = document.getElementById('feedback-comment').value.trim();
+        sendFeedback(feedbackType, comment);
+    }
+
+    function cancelFeedback() {
+        document.getElementById('feedback-form').classList.add('d-none');
+        document.getElementById('feedback-buttons').classList.remove('d-none');
+        feedbackType = null;
+    }
+
+    function sendFeedback(type, comment) {
+        // Prepare feedback payload
+        const payload = {
+            type: type,
+            comment: comment,
+            timestamp: new Date().toISOString(),
+            data: feedbackData
+        };
+
+        // Send to backend
+        fetch('/api/feedback', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Feedback submitted:', data);
+
+            // Hide buttons and form, show thank you message
+            document.getElementById('feedback-buttons').classList.add('d-none');
+            document.getElementById('feedback-form').classList.add('d-none');
+            document.getElementById('feedback-message').classList.remove('d-none');
+        })
+        .catch((error) => {
+            console.error('Error submitting feedback:', error);
+            alert('Failed to submit feedback. Please try again.');
+        });
+    }
+
     console.log('Results page loaded');
 </script>
 {% endblock %}

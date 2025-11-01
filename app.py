@@ -95,11 +95,13 @@ def submit_questionnaire():
     use_case = data.get('use_case')
     visual_ai_type = data.get('visual_ai_type')
     model_type = data.get('model_type')
+    priority = data.get('priority')  # 'lower_cost' or 'better_performance'
 
     recommendations = recommendation_engine.get_top_recommendations(
         use_case=use_case,
         visual_ai_type=visual_ai_type,
         model_type=model_type,
+        priority=priority,
         top_n=3
     )
 
@@ -209,6 +211,53 @@ def suggest_use_case():
         traceback.print_exc()
         return jsonify({
             "error": "An error occurred while processing your request.",
+            "status": "error"
+        }), 500
+
+@app.route('/api/feedback', methods=['POST'])
+def save_feedback():
+    """Endpoint to save user feedback on recommendations"""
+    try:
+        import json
+        from datetime import datetime
+
+        feedback = request.get_json()
+
+        if not feedback:
+            return jsonify({"error": "No feedback data provided"}), 400
+
+        feedback_type = feedback.get('type')  # 'up' or 'down'
+
+        if feedback_type not in ['up', 'down']:
+            return jsonify({"error": "Invalid feedback type"}), 400
+
+        # Create filename with timestamp
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        folder = 'thumbs_up' if feedback_type == 'up' else 'thumbs_down'
+        filename = f"feedback_{timestamp}.json"
+        filepath = os.path.join('outputs', folder, filename)
+
+        # Ensure directory exists
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
+
+        # Save feedback to file
+        with open(filepath, 'w') as f:
+            json.dump(feedback, f, indent=2)
+
+        print(f"✅ Saved {feedback_type} feedback to {filepath}")
+
+        return jsonify({
+            "status": "success",
+            "message": "Feedback saved successfully",
+            "filename": filename
+        })
+
+    except Exception as e:
+        print(f"❌ Error saving feedback: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            "error": "An error occurred while saving feedback.",
             "status": "error"
         }), 500
 

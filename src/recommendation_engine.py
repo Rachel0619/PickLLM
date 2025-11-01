@@ -92,7 +92,7 @@ class RecommendationEngine:
 
         return data
 
-    def get_top_recommendations(self, use_case: str, visual_ai_type: Optional[str] = None, model_type: Optional[str] = None, top_n: int = 3) -> List[Dict]:
+    def get_top_recommendations(self, use_case: str, visual_ai_type: Optional[str] = None, model_type: Optional[str] = None, priority: Optional[str] = None, top_n: int = 3) -> List[Dict]:
         """
         Get top N model recommendations for a given use case.
 
@@ -100,6 +100,7 @@ class RecommendationEngine:
             use_case: Primary use case selected by user
             visual_ai_type: Visual AI type if use_case is 'visual_ai'
             model_type: Model type preference ('open_only', 'proprietary_only_enterprise', 'no_preference')
+            priority: User priority ('lower_cost' or 'better_performance')
             top_n: Number of top recommendations to return (default: 3)
 
         Returns:
@@ -142,7 +143,20 @@ class RecommendationEngine:
             print(f"❌ No models found after applying model_type filter: {model_type}")
             return []
 
-        # Get top N models (CSV is already ranked)
+        # Apply sorting based on user's priority
+        if priority == 'lower_cost':
+            # Sort by pricing (ascending) - lower cost first
+            # Convert pricing to float, handling non-numeric values
+            df['pricing_numeric'] = pd.to_numeric(df['pricing'], errors='coerce')
+            df = df.sort_values('pricing_numeric', ascending=True)
+            print(f"💰 Sorted by cost (lowest first)")
+        else:
+            # Default: Sort by rank (better performance first)
+            # CSV is already sorted by rank, but ensure it
+            df = df.sort_values('rank', ascending=True)
+            print(f"🏆 Sorted by performance (rank)")
+
+        # Get top N models
         top_models = df.head(top_n)
 
         # Convert to list of dictionaries with relevant fields

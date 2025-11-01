@@ -1,6 +1,18 @@
 # PickLLM
 
-🚀 **[Try it live on Hugging Face Spaces!](https://huggingface.co/spaces/Rachel0619/PickLLM)**
+<div align="center">
+
+## 🚀 **[Try PickLLM Live →](https://huggingface.co/spaces/Rachel0619/PickLLM)**
+### Find Your Perfect LLM in Minutes, Not Hours
+
+[![Hugging Face Spaces](https://img.shields.io/badge/🤗-Hugging%20Face%20Spaces-blue)](https://huggingface.co/spaces/Rachel0619/PickLLM)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Flask](https://img.shields.io/badge/flask-3.1.2-green.svg)](https://flask.palletsprojects.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+</div>
+
+---
 
 ## 📝 What is PickLLM?
 
@@ -15,7 +27,7 @@ PickLLM helps users find the right large language model (LLM) for their specific
 - ⚖️ Users must switch between different leaderboards when facing trade-offs among cost, latency, and intelligence
 - 🔍 Users need actionable recommendations, not raw benchmark scores
 
-**Our Solution:**
+**The Solution:**
 
 - 📝 Simple questionnaire to understand your use case
 - 🧠 Smart recommendation engine powered by LLM database
@@ -169,6 +181,60 @@ The result is a personalized selection of LLMs that best match your specific req
 - 💡 **Actionable Insights** - Clear explanations, not just numbers
 - 🚀 **Fast & Simple** - Get recommendations in minutes, not hours
 - 🎯 **No Signup Required** - Jump straight to finding your perfect LLM
+- 👍👎 **User Feedback System** - Help us improve with thumbs up/down feedback
+- 🧪 **Comprehensive Testing** - LLM behavior tests ensure reliable outputs
+
+## 🧪 Testing
+
+PickLLM includes comprehensive LLM behavior tests to ensure reliable and consistent outputs from AI components.
+
+### Test Suite Overview
+
+- **35 tests** across 3 LLM components
+- Tests for output format, content accuracy, and consistency
+- Real API calls to validate production behavior
+
+**Test Files:**
+- `test_recommendation_explainer.py` - AI-generated explanation tests (9 tests)
+- `test_use_case_helper.py` - Use case classification tests (14 tests)
+- `test_rag.py` - RAG chatbot behavior tests (12 tests)
+
+### Running Tests
+
+```bash
+# Install test dependencies
+uv pip install pytest python-frontmatter sentence-transformers tqdm numpy minsearch
+
+# Run all tests
+pytest tests/ -v
+
+# Run specific test file
+pytest tests/test_recommendation_explainer.py -v
+```
+
+**📖 For detailed testing documentation, see [tests/README.md](tests/README.md)**
+
+## 👍👎 User Feedback System
+
+PickLLM collects user feedback to continuously improve recommendation quality.
+
+### How It Works
+
+1. **Thumbs Up/Down Buttons** - Rate recommendations on the results page
+2. **Optional Comments** - Provide detailed feedback for improvements (thumbs down)
+3. **Local Storage** - Feedback saved anonymously in `outputs/` directory
+4. **Privacy First** - No personal information collected
+
+### Feedback Structure
+
+```
+outputs/
+├── thumbs_up/         # Positive feedback examples
+├── thumbs_down/       # Negative feedback with improvement suggestions
+└── README.md          # Detailed feedback analysis guide
+```
+
+**📖 For feedback analysis and insights, see [outputs/README.md](outputs/README.md)**
 
 ## 🤝 Contributing
 
@@ -184,10 +250,3 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🗺️ Roadmap
-
-- [x] **Phase 1:** Core questionnaire and recommendation engine
-- [ ] **Phase 2:** Advanced filtering and comparison features
-- [ ] **Phase 3:** LLM database integration with real-time data
-- [ ] **Phase 4:** API access for developers
-- [ ] **Phase 5:** Mobile app and advanced analytics

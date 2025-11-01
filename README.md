@@ -2,7 +2,7 @@
 
 <div align="center">
 
-## 🚀 **[Try PickLLM Live →](https://huggingface.co/spaces/Rachel0619/PickLLM)**
+## 🚀 **[Try PickLLM Live ➡️](https://huggingface.co/spaces/Rachel0619/PickLLM)**
 ### Find Your Perfect LLM in Minutes, Not Hours
 
 [![Hugging Face Spaces](https://img.shields.io/badge/🤗-Hugging%20Face%20Spaces-blue)](https://huggingface.co/spaces/Rachel0619/PickLLM)

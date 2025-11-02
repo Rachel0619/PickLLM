@@ -156,7 +156,7 @@ Our questionnaire consists of 8 core questions plus an optional description fiel
 - Proprietary only with enterprise SLA
 - No preference
 
-**3. What do you value more?**
+**3. Which do you value more?**
 - Lower Cost - I want the most affordable option
 - Better Performance - I want the highest quality results
 

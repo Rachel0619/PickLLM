@@ -1,0 +1,9 @@
+{
+	"name": "databag-datafactory-1984",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "1a910fe2-eac0-46bd-bd45-8687ea92c992",
+		"tenantId": "f7f34721-b84a-4873-a04f-2bf12394d498"
+	}
+}
